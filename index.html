@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>中国传统色彩</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f0e8;--text:#3d2b1f;--card-bg:#fff;
+  --shadow:rgba(61,43,31,0.1);--border:#d4c8b8;
+  --accent:#c0392b;--robe-color:#FF4C00;
+  --radius:240px;--muted:#8a7a6a;
+  --card-hover:rgba(61,43,31,0.05);
+}
+body{background:var(--bg);color:var(--text);font-family:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif;min-height:100vh}
+#app{display:flex;flex-direction:column;height:100vh}
+header{text-align:center;padding:12px 20px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+header h1{font-size:22px;font-weight:700;letter-spacing:6px}
+header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
+.main-content{display:flex;flex:1;overflow:hidden}
+
+/* Left panel */
+.left-panel{width:42%;display:flex;flex-direction:column;align-items:center;padding:15px 15px 8px;border-right:1px solid var(--border);overflow:hidden}
+
+/* Carousel with real paintings */
+.carousel-wrap{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;perspective:800px;position:relative}
+.carousel-wrap::before{content:'';position:absolute;width:90%;padding-bottom:90%;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(200,180,160,.2) 0%,rgba(200,180,160,.06) 45%,transparent 70%);pointer-events:none;border-radius:50%}
+.carousel{width:280px;height:290px;position:relative;transform-style:preserve-3d;transition:transform 0.1s;cursor:grab;will-change:transform}
+.carousel:active{cursor:grabbing}
+.carousel-card{position:absolute;width:260px;height:270px;left:10px;top:10px;backface-visibility:hidden;border-radius:10px;overflow:hidden;background:var(--card-bg);box-shadow:0 6px 25px var(--shadow);display:flex;align-items:center;justify-content:center;flex-direction:column;will-change:transform,opacity}
+.carousel-card .img-wrap{width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#e8ddd0}
+.carousel-card .img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.carousel-card .img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,var(--card-bg));pointer-events:none}
+.carousel-card .color-overlay{position:absolute;inset:0;mix-blend-mode:color;background:var(--robe-color);opacity:0.5;pointer-events:none;transition:background 0.5s;-webkit-mask-image:var(--overlay-mask);mask-image:var(--overlay-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%}
+.carousel-card .painting-name{position:absolute;top:0;left:0;right:0;padding:7px 10px;background:linear-gradient(rgba(0,0,0,0.55),transparent);color:#f0e8d8;font-size:12px;letter-spacing:2px;text-align:center;pointer-events:none}
+.carousel-card .lady-name{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);letter-spacing:2px;pointer-events:none}
+.carousel-card svg{width:90%;height:90%;display:block}
+.carousel-card .robe{transition:fill 0.5s ease}
+
+/* Info panel */
+.info-panel{width:100%;max-width:420px;flex-shrink:0;padding:12px 0 4px;text-align:center;position:relative}
+.info-panel::before{content:'';display:block;width:70%;height:5px;border-radius:3px;margin:0 auto 10px;background:var(--robe-color);transition:background .5s}
+.info-panel::after{content:'';position:absolute;top:9px;left:15%;width:9px;height:9px;border-radius:50%;background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;box-shadow:0 0 10px var(--dot-color-0,var(--robe-color))}
+@keyframes bounceDot{
+0%{left:15%;background:var(--dot-color-0,var(--robe-color));box-shadow:0 0 10px var(--dot-color-0,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+12%{transform:scaleX(1.05) scaleY(.95)}
+25%{left:32.5%;background:var(--dot-color-1,var(--robe-color));box-shadow:0 0 12px var(--dot-color-1,var(--robe-color));transform:scaleX(1.1) scaleY(.9)}
+37%{transform:scaleX(1.05) scaleY(.95)}
+50%{left:calc(85% - 9px);background:var(--dot-color-2,var(--robe-color));box-shadow:0 0 10px var(--dot-color-2,var(--robe-color)),6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+62%{transform:scaleX(1.05) scaleY(.95)}
+75%{left:32.5%;background:var(--dot-color-3,var(--robe-color));box-shadow:0 0 12px var(--dot-color-3,var(--robe-color));transform:scaleX(1.1) scaleY(.9)}
+87%{transform:scaleX(1.05) scaleY(.95)}
+100%{left:15%;background:var(--dot-color-4,var(--robe-color));box-shadow:0 0 10px var(--dot-color-4,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+}
+.color-name-row{display:flex;justify-content:center;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap}
+.color-name-row .name{font-size:26px;font-weight:700;letter-spacing:4px}
+.color-name-row .name ruby{text-decoration:none}
+.color-name-row .name rt{font-size:12px;font-weight:400;color:var(--muted);letter-spacing:0}
+.color-name-row .hex{font-size:13px;color:var(--muted);font-family:monospace}
+.color-desc{font-size:13px;color:#6a5a4a;line-height:1.6;max-width:360px;margin:2px auto 6px}
+.related-label{font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:2px}
+.related-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.related-chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;cursor:pointer;border:1px solid var(--border);transition:all 0.2s;background:var(--card-bg)}
+.related-chip:hover{border-color:var(--text)}
+.related-chip .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
+/* Palette */
+.palette-section{margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+.palette-label{font-size:11px;color:var(--muted);margin-bottom:6px;letter-spacing:2px}
+.palette-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.palette-item-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.palette-item{width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 6px var(--shadow),0 0 0 2px var(--card-bg);flex-shrink:0}
+.palette-item:hover{transform:translateY(-4px) scale(1.12);box-shadow:0 6px 14px var(--shadow),0 0 0 2px var(--card-bg);z-index:2}
+.palette-item-name{font-size:10px;color:var(--muted);white-space:nowrap;max-width:42px;overflow:hidden;text-overflow:ellipsis;text-align:center}
+
+/* Right panel */
+.right-panel{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{padding:10px 14px 6px;flex-shrink:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:1px solid var(--border)}
+.filter-group{display:flex;flex-wrap:wrap;gap:4px}
+.filter-btn{padding:4px 12px;border-radius:14px;border:1px solid var(--border);background:var(--card-bg);font-size:13px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:inherit}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search-input{flex:1;min-width:100px;padding:5px 12px;border:1px solid var(--border);border-radius:14px;font-size:13px;background:var(--card-bg);color:var(--text);outline:none;font-family:inherit}
+.search-input:focus{border-color:var(--accent)}
+.mode-btn{padding:4px 12px;border-radius:14px;border:1px solid var(--border);background:var(--card-bg);font-size:12px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:inherit;letter-spacing:1px;display:flex;align-items:center;gap:3px;flex-shrink:0}
+.mode-btn:hover{border-color:var(--accent);color:var(--accent)}
+.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid-wrap{flex:1;overflow-y:auto;padding:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px}
+.color-card{border-radius:8px;overflow:hidden;background:var(--card-bg);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 2px 8px var(--shadow);border:2px solid transparent}
+.color-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow)}
+.color-card.active{border-color:var(--accent)}
+.color-swatch{height:65px;transition:background 0.3s}
+.color-card .info{padding:8px 6px;text-align:center}
+.color-card .info .cname{font-size:14px;font-weight:700;letter-spacing:1px}
+.color-card .info .cname ruby{text-decoration:none}
+.color-card .info .cname rt{font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0}
+.color-card .info .cfamily{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:2px;opacity:.7}
+.hint-bar{text-align:center;padding:5px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0}
+.hint-twin-btn{cursor:pointer;transition:color .25s;display:inline}
+.hint-twin-btn:hover{color:var(--accent)}
+.hint-bar-sep{color:var(--border);margin:0 4px}
+
+/* Twin universe modal */
+.twin-overlay{display:none;position:fixed;inset:0;z-index:1100;background:rgba(61,43,31,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+.twin-overlay.open{display:flex}
+.twin-panel{position:relative;width:100%;max-width:800px;max-height:85vh;background:#fdfaf5;border-radius:16px;box-shadow:0 20px 60px rgba(61,43,31,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalSlideUp .35s ease}
+@keyframes modalSlideUp{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.twin-close{position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#8a7a6a;background:rgba(245,240,232,.8);border-radius:50%;transition:all .25s ease;z-index:10;border:none;cursor:pointer;font-family:inherit}
+.twin-close:hover{color:var(--accent);background:rgba(192,57,43,.1);transform:rotate(90deg)}
+.twin-header{text-align:center;padding:36px 32px 20px;flex-shrink:0}
+.twin-header h2{font-family:inherit;font-size:1.3rem;font-weight:700;color:#3d2b1f;letter-spacing:4px}
+.twin-subtitle{font-size:.78rem;color:var(--muted);letter-spacing:2px;margin-top:6px}
+.twin-body{padding:0 32px 28px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.twin-section{margin-bottom:28px}
+.twin-section:last-child{margin-bottom:0}
+.twin-section-title{font-family:inherit;font-size:.8rem;font-weight:600;color:var(--text);letter-spacing:2px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid rgba(192,57,43,.15);display:flex;align-items:center;gap:6px}
+.twin-grid{display:flex;flex-wrap:wrap;gap:10px}
+.twin-card{display:inline-flex;align-items:center;gap:12px;padding:12px 16px;background:#f8f4ee;border:1px solid #e4dcd0;border-radius:10px;text-decoration:none;transition:all .25s ease;flex:1;min-width:200px;max-width:360px}
+.twin-card:hover{border-color:var(--accent);background:#fdf8f0;transform:translateY(-2px);box-shadow:0 4px 16px rgba(192,57,43,.08)}
+.twin-card-icon{font-size:1.2rem;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(245,240,232,.6);border-radius:8px}
+.twin-card-info{flex:1;min-width:0;display:flex;flex-direction:column}
+.twin-card-name{font-family:inherit;font-size:.85rem;font-weight:600;color:var(--text);line-height:1.4}
+.twin-card-desc{font-size:.72rem;color:var(--muted);line-height:1.4;margin-top:2px}
+.twin-card-arrow{font-size:.9rem;color:#c4b89e;flex-shrink:0;transition:all .25s}
+.twin-card:hover .twin-card-arrow{color:var(--accent);transform:translateX(3px)}
+
+/* Mobile */
+@media(max-width:768px){
+  #app{height:auto;min-height:100vh}
+  .main-content{flex-direction:column}
+  .left-panel{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:10px;min-height:380px}
+  .carousel{width:200px;height:210px}
+  .carousel-card{width:185px;height:195px;left:7.5px;top:7.5px}
+  :root{--radius:180px}
+  .info-panel{padding:8px 0}
+  .color-name-row .name{font-size:22px}
+  .right-panel{height:auto;max-height:55vh}
+  .grid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .color-swatch{height:50px}
+  .palette-item{width:30px;height:30px}
+  .palette-item-name{font-size:9px;max-width:34px}
+  header h1{font-size:18px}
+  .twin-overlay{padding:0;align-items:flex-end}
+  .twin-panel{max-width:100%;max-height:92vh;border-radius:16px 16px 0 0}
+  .twin-header{padding:28px 20px 16px}
+  .twin-header h2{font-size:1.1rem}
+  .twin-body{padding:0 20px 24px}
+  .twin-card{min-width:160px;padding:10px 14px}
+}
+@media(max-width:480px){
+  .left-panel{min-height:330px}
+  .carousel{width:170px;height:185px}
+  .carousel-card{width:156px;height:171px;left:7px;top:7px}
+  :root{--radius:160px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:5px}
+  .color-swatch{height:45px}
+  .palette-item{width:26px;height:26px}
+  .palette-item-name{font-size:8px;max-width:30px}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <h1>中国传统色彩</h1>
+    <div class="sub">共 <span id="totalCount">67</span> 色 · 点击颜色卡为画作着色</div>
+  </header>
+
+  <div class="main-content">
+    <div class="left-panel">
+      <div class="carousel-wrap">
+        <div class="carousel" id="carousel"></div>
+      </div>
+      <div class="info-panel">
+        <div class="color-name-row">
+          <span class="name" id="currentName">朱红</span>
+          <span class="hex" id="currentHex">#FF4C00</span>
+        </div>
+        <div class="color-desc" id="currentDesc">正红色，介于红与橙之间，传统吉祥色。</div>
+        <div class="related-label">— 同系颜色 —</div>
+        <div class="related-chips" id="relatedChips"></div>
+        <div class="palette-section">
+          <div class="palette-label">— 配色灵感 —</div>
+          <div class="palette-row" id="paletteRow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="toolbar">
+        <div class="filter-group" id="filterGroup">
+          <button class="filter-btn active" data-family="all">全部</button>
+        </div>
+        <button class="mode-btn" id="modeBtn">🏺 画作</button>
+        <input class="search-input" id="searchInput" placeholder="搜索颜色名..." autocomplete="off">
+      </div>
+      <div class="grid-wrap">
+        <div class="grid" id="colorGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint-bar">
+    拖拽 360° 环绕 · 点击颜色卡着色 · 切换画作/纹样模式
+    <span class="hint-bar-sep">·</span>
+    <span class="hint-twin-btn" onclick="toggleTwin()">🌌 孪生宇宙 <span style="font-size:.8em;opacity:.6">点击见大世界</span></span>
+  </div>
+</div>
+
+<!-- 孪生宇宙弹窗 -->
+<div class="twin-overlay" id="twinView" onclick="if(event.target===this)toggleTwin()">
+  <div class="twin-panel">
+    <button class="twin-close" onclick="toggleTwin()">✕</button>
+    <div class="twin-header">
+      <h2>🌌 中国传统色孪生宇宙</h2>
+      <p class="twin-subtitle">我的其他项目 · 点击跳转</p>
+    </div>
+    <div class="twin-body" id="twinContainer"></div>
+  </div>
+</div>
+
+<script>
+const COLORS = [
+  {id:'jiang',name:'绛',p:'jiàng',family:'红',hex:'#8B1A1A',desc:'大红色，比朱红更深，古时常用作礼服色。'},
+  {id:'zhuhong',name:'朱红',family:'红',hex:'#FF4C00',desc:'正红色，介于红与橙之间，传统吉祥色。'},
+  {id:'yanzhi',name:'胭脂',p:'yān zhī',family:'红',hex:'#C72C48',desc:'女子化妆用的深粉红色，取自胭脂花。'},
+  {id:'zhongguohong',name:'中国红',family:'红',hex:'#D32F2F',desc:'中国人最喜爱的喜庆正红色，象征热情与繁荣。'},
+  {id:'taohong',name:'桃红',family:'红',hex:'#F47983',desc:'桃花般的粉红色，娇艳明媚。'},
+  {id:'shiliuhong',name:'石榴红',family:'红',hex:'#D9383A',desc:'石榴花的鲜红色，浓郁热烈。'},
+  {id:'tuoyan',name:'酡颜',p:'tuó yán',family:'红',hex:'#F08080',desc:'饮酒后脸上泛起的红晕，微醺之色。'},
+  {id:'haitianxia',name:'海天霞',family:'红',hex:'#E8C4B8',desc:'明代宫廷流行色，似白而微红，如海上朝霞。'},
+  {id:'shuse',name:'曙色',family:'红',hex:'#E8845C',desc:'清晨破晓时红黄相间的天色，温暖明亮。'},
+  {id:'sufang',name:'苏芳',p:'sū fāng',family:'红',hex:'#8B3A62',desc:'源自苏木染出的深红色，深沉古典。'},
+  {id:'xunhuang',name:'纁黄',p:'xūn huáng',family:'红',hex:'#D4693A',desc:'太阳落山后余光折射的橙红色，与"玄"相对。'},
+  {id:'qianse',name:'茜色',p:'qiàn sè',family:'红',hex:'#B74141',desc:'茜草根染出的深红色，古代最重要的红色染料之一。'},
+  {id:'yinhong',name:'银红',family:'红',hex:'#D98989',desc:'银朱调和而成的粉红色，明代服饰常见色。'},
+  {id:'shuihong',name:'水红',family:'红',hex:'#E8B0B0',desc:'淡如水的浅红，清透温润。'},
+  {id:'feihong',name:'妃红',family:'红',hex:'#D69B9B',desc:'淡粉红色，唐制妃嫔常服之色。'},
+  {id:'haitanghong',name:'海棠红',family:'红',hex:'#D45D5D',desc:'海棠花开的淡紫红色，"海棠不惜胭脂色"。'},
+  {id:'tanse',name:'檀色',family:'红',hex:'#B87070',desc:'浅紫红色，如檀木之色，沉稳温柔。'},
+  {id:'xiangse',name:'缃色',p:'xiāng sè',family:'黄',hex:'#EDD9A0',desc:'浅黄色，如初生桑叶之色。'},
+  {id:'xiangye',name:'缃叶',p:'xiāng yè',family:'黄',hex:'#E8D48B',desc:'同"缃色"，特指桑叶初生的淡黄。'},
+  {id:'zhizi',name:'栀子',family:'黄',hex:'#F0D060',desc:'用栀子果实染出的黄色，偏暖。'},
+  {id:'nenehuang',name:'嫩鹅黄',family:'黄',hex:'#FDEAA8',desc:'小鹅绒毛的淡黄色，鲜嫩可爱。'},
+  {id:'ehuang',name:'鹅黄',family:'黄',hex:'#FFE55C',desc:'小鹅的黄色，较嫩鹅黄略明亮。'},
+  {id:'songhua',name:'松花',family:'黄',hex:'#F5E6A3',desc:'松花粉的淡黄色，轻淡柔和。'},
+  {id:'huangheliuli',name:'黄河琉璃',family:'黄',hex:'#E8B830',desc:'日光照耀下黄河水如同黄琉璃般璀璨。'},
+  {id:'boshi',name:'薄柿',family:'黄',hex:'#E8A860',desc:'未熟柿子的淡橘黄色，质朴温暖。'},
+  {id:'qiuxiangse',name:'秋香色',family:'黄',hex:'#C4A84C',desc:'秋日草木的黄绿色调，稳重大气，《红楼梦》中多见。'},
+  {id:'hupo',name:'琥珀',family:'黄',hex:'#C8763A',desc:'琥珀树脂的暖棕黄色，温润通透。'},
+  {id:'mihese',name:'蜜合色',family:'黄',hex:'#E8C878',desc:'淡黄微红的柔和暖色，如蜜调和。'},
+  {id:'tianpiao',name:'天缥',p:'tiān piǎo',family:'青',hex:'#C8E0E8',desc:'如雨过天青的浅青色，清透淡雅。'},
+  {id:'zhuqing',name:'竹青',family:'青',hex:'#78A87C',desc:'竹子表面的青绿色，生机盎然。'},
+  {id:'gunqing',name:'群青',family:'青',hex:'#2E4E8E',desc:'鲜艳的深蓝色，古代因原料珍贵而价值堪比黄金。'},
+  {id:'tianqing',name:'天青',family:'青',hex:'#68A0C8',desc:'雨后天空的青色，纯净致远。'},
+  {id:'canglang',name:'沧浪',family:'青',hex:'#5CA8A8',desc:'水色，青绿色，出自《孟子》"沧浪之水清兮"。'},
+  {id:'tianshuibi',name:'天水碧',family:'青',hex:'#80B0B8',desc:'南唐后主李煜的姬妾所染，如秋水澄澈。'},
+  {id:'piaose',name:'缥色',p:'piǎo sè',family:'青',hex:'#B8D0D8',desc:'淡青色，常与"缃"对举，指代书卷。'},
+  {id:'zhuyue',name:'竹月',family:'青',hex:'#486878',desc:'竹林中月光的淡蓝色，清冷寂寥。'},
+  {id:'qiaoxiachunbo',name:'桥下春波',family:'青',hex:'#6AA08A',desc:'春日桥下清波的蓝绿色，充满诗意。'},
+  {id:'ruocao',name:'若草',family:'青',hex:'#A8C868',desc:'如初生嫩草般的黄绿色，充满生机。'},
+  {id:'qingmeizhujiu',name:'青梅煮酒',family:'青',hex:'#8AA868',desc:'青梅与黄酒交融的青黄色，典故出自《三国演义》。'},
+  {id:'dianlan',name:'靛蓝',p:'diàn lán',family:'青',hex:'#1E3A5F',desc:'蓝草制靛染出的深蓝色，中国传统染料代表之一。'},
+  {id:'dailan',name:'黛蓝',p:'dài lán',family:'青',hex:'#2A4070',desc:'深蓝带青，远山如黛之色。'},
+  {id:'douqing',name:'豆青',family:'青',hex:'#90B87A',desc:'青瓷的淡青绿色，温润如玉。'},
+  {id:'liulv',name:'柳绿',family:'青',hex:'#68A84A',desc:'春日新柳的嫩绿色，鲜嫩明快。'},
+  {id:'aiqing',name:'艾青',family:'青',hex:'#688058',desc:'艾草叶的苍绿色，古朴深沉。'},
+  {id:'shilv',name:'石绿',family:'青',hex:'#58A878',desc:'矿物颜料制绿色，敦煌壁画常用色。'},
+  {id:'yuanshanrudai',name:'远山如黛',family:'青',hex:'#4A5878',desc:'远山呈现的深青黑色，古代女子常用作画眉色。'},
+  {id:'tubai',name:'荼白',p:'tú bái',family:'白',hex:'#F0EDE4',desc:'如荼（一种白花）的白色，素净雅致。'},
+  {id:'yuebai',name:'月白',family:'白',hex:'#C8D8E8',desc:'带淡蓝调的白色，如月光般清冷。'},
+  {id:'ningzhi',name:'凝脂',family:'白',hex:'#F8F0E0',desc:'如凝固的油脂，形容肌肤白皙细腻，出自《诗经》。'},
+  {id:'gao',name:'缟',p:'gǎo',family:'白',hex:'#E8E0D0',desc:'未经染色的白绢之色，素朴本真。'},
+  {id:'xuanse',name:'玄色',p:'xuán sè',family:'黑',hex:'#1A1820',desc:'黑中带赤，指夜空之色，神秘庄重。'},
+  {id:'zise',name:'缁色',p:'zī sè',family:'黑',hex:'#2A2830',desc:'纯黑色，古时僧侣常服之色。'},
+  {id:'yaqing',name:'鸦青',family:'黑',hex:'#384048',desc:'黑中带紫绿光泽，如乌鸦羽毛之色。'},
+  {id:'xuantian',name:'玄天',p:'xuán tiān',family:'黑',hex:'#3A2840',desc:'黎明前黑中透红的天空色，太阳将出未出之际。'},
+  {id:'baicaoshuang',name:'百草霜',family:'黑',hex:'#484848',desc:'锅底上百种草烧完后形成的如霜灰烬之色。'},
+  {id:'yanse',name:'烟色',family:'黑',hex:'#686868',desc:'如烟雾般的灰棕色，朦胧淡雅。'},
+  {id:'zaose',name:'皂色',p:'zào sè',family:'黑',hex:'#303030',desc:'纯深黑灰色，古时官服与平民常服多见。'},
+  {id:'chenxiang',name:'沉香',family:'褐',hex:'#6A5040',desc:'沉香木的黄黑色，沉稳高级。'},
+  {id:'zheshi',name:'赭石',p:'zhě shí',family:'褐',hex:'#8B6048',desc:'红褐色矿物颜料，岩画与壁画中常用。'},
+  {id:'luoli',name:'落栗',family:'褐',hex:'#885848',desc:'栗壳的褐棕色，质朴温暖。'},
+  {id:'mushanzi',name:'暮山紫',family:'紫',hex:'#6A4A8A',desc:'夕阳薄雾笼罩远山时呈现的紫色，出自王勃《滕王阁序》。'},
+  {id:'ouhe',name:'藕荷',p:'ǒu hé',family:'紫',hex:'#C8A8C8',desc:'浅紫带粉红，淡雅温柔，常见于服饰。'},
+  {id:'zhizhu',name:'踯躅',p:'zhí zhú',family:'紫',hex:'#D48AA8',desc:'杜鹃花（踯躅花）的粉紫色，明艳动人。'},
+  {id:'qinglian',name:'青莲',family:'紫',hex:'#7858A8',desc:'偏蓝的淡紫色，如青莲花瓣，清雅高洁。'},
+  {id:'dingxiang',name:'丁香',family:'紫',hex:'#B8A0C0',desc:'丁香花的淡紫粉色，清雅含蓄。'},
+  {id:'dongfangjibai',name:'东方既白',family:'青',hex:'#A8C8E0',desc:'黎明时天空蓝中透白的颜色，出自苏轼《赤壁赋》。'},
+  {id:'meiran',name:'梅染',family:'红',hex:'#C8A098',desc:'用梅花树枝染就的颜色，清雅高洁。'}
+];
+
+// ====== Traditional Patterns ======
+const PATTERNS = [
+  { name:'云纹 · 敦煌', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><path class="co" d="M-80,-20C-90,-40-70,-60-40,-55-20,-70 10,-65 25,-50 50,-55 70,-40 60,-20 70,0 55,20 35,20 40,35 25,50 5,45-15,55-35,45-40,25-55,30-75,15-70,-5Z"/><path class="co" d="M-70,-5C-80,-5-90,5-85,15-80,25-65,20-60,10Z"/><path class="co" d="M50,-35C60,-45 75,-40 80,-25 85,-10 70,0 55,-10Z"/><circle cx="-25" cy="-35" r="4" class="dk"/><circle cx="20" cy="-40" r="3" class="dk"/><circle cx="-15" cy="25" r="3.5" class="dk"/><circle cx="35" cy="10" r="3" class="dk"/><path class="li" d="M-80,-20C-90,-40-70,-60-40,-55-20,-70 10,-65 25,-50 50,-55 70,-40 60,-20 70,0 55,20 35,20 40,35 25,50 5,45-15,55-35,45-40,25-55,30-75,15-70,-5Z"/><path class="li" d="M-70,-5C-80,-5-90,5-85,15-80,25-65,20-60,10Z"/><path class="li" d="M50,-35C60,-45 75,-40 80,-25 85,-10 70,0 55,-10Z"/><path class="li" d="M-40,-55C-35,-45-30,-42-25,-45"/><path class="li" d="M25,-50C30,-42 35,-40 40,-45"/></g></svg>' },
+  { name:'回纹 · 商周', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}</style><g transform="translate(130,130)"><rect x="-95" y="-95" width="190" height="190" class="li"/><rect x="-80" y="-80" width="160" height="160" class="li" stroke-width="1.5"/><path class="co li" d="M-70,-65L-70,-45L-40,-45L-40,-65M-30,-65L-30,-45L0,-45L0,-65M10,-65L10,-45L40,-45L40,-65M50,-65L50,-45L70,-45"/><path class="co li" d="M-70,45L-70,65L-40,65L-40,45M-30,45L-30,65L0,65L0,45M10,45L10,65L40,65L40,45M50,45L50,65L70,65"/><path class="co li" d="M-65,-70L-65,-40L-45,-40L-45,-70M-65,-30L-65,0L-45,0L-45,-30M-65,10L-65,40L-45,40L-45,10M-65,50L-65,70"/><path class="co li" d="M65,-70L65,-40L45,-40L45,-70M65,-30L65,0L45,0L45,-30M65,10L65,40L45,40L45,10M65,50L65,70"/><rect x="-25" y="-25" width="50" height="50" class="li"/><rect x="-12" y="-12" width="24" height="24" class="co" rx="2"/></g></svg>' },
+  { name:'缠枝莲 · 织锦', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}</style><g transform="translate(130,130)"><path class="co" d="M-15,-30C-5,-45 5,-45 15,-30 20,-20 20,5 15,20 5,35-5,35-15,20-20,5-20,-20-15,-30Z"/><path class="co" d="M0,-28C-2,-18-5,-10-3,0 0,-5 3,-10 0,-28Z"/><path class="co" d="M-8,-22C-5,-15-8,-8-6,0-3,-5-6,-10-8,-22Z"/><path class="co" d="M8,-22C5,-15 8,-8 6,0 3,-5 6,-10 8,-22Z"/><path class="li" d="M-15,-20C-45,-30-50,-60-35,-70"/><path class="li" d="M15,-20C45,-30 50,-60 35,-70"/><path class="li" d="M-15,20C-45,30-50,60-35,70"/><path class="li" d="M15,20C45,30 50,60 35,70"/><path class="co" d="M-40,-50C-45,-55-35,-65-30,-55-25,-45-35,-45-40,-50Z"/><path class="co" d="M40,-50C45,-55 35,-65 30,-55 25,-45 35,-45 40,-50Z"/><path class="co" d="M-40,50C-45,55-35,65-30,55-25,45-35,45-40,50Z"/><path class="co" d="M40,50C45,55 35,65 30,55 25,45 35,45 40,50Z"/><path class="li" d="M-35,-70C-30,-80-20,-75-25,-65"/><path class="li" d="M35,-70C30,-80 20,-75 25,-65"/><path class="li" d="M-35,70C-30,80-20,75-25,65"/><path class="li" d="M35,70C30,80 20,75 25,65"/><path class="li" d="M-15,-30C-5,-45 5,-45 15,-30 20,-20 20,5 15,20 5,35-5,35-15,20-20,5-20,-20-15,-30Z"/></g></svg>' },
+  { name:'冰梅纹 · 明清', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1;fill:none}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><path class="li" d="M-90,0L-30,-50L40,-30L90,-80" opacity="0.4"/><path class="li" d="M-80,60L-20,10L30,50L80,20" opacity="0.4"/><path class="li" d="M-60,-80L0,-40L60,-70" opacity="0.4"/><path class="li" d="M-70,-30L-10,-10L50,-50" opacity="0.4"/><path class="li" d="M-50,40L10,20L70,60" opacity="0.4"/><g transform="translate(0,0)"><path class="co" d="M0,-5C-2,-14-8,-18-12,-14-14,-10-10,-4-5,-2Z"/><path class="co" d="M0,-5C7,-12 14,-10 12,-5 10,0 5,2 2,-1Z"/><path class="co" d="M0,-5C8,6 8,14 3,15-2,16-4,10-2,4Z"/><path class="co" d="M0,-5C-8,6-14,10-12,14-10,18-4,15-2,8Z"/><path class="co" d="M0,-5C2,-14 8,-18 12,-14 14,-10 10,-4 5,-2Z"/><circle cx="0" cy="-5" r="3" class="dk"/></g><g transform="translate(-55,-60)scale(0.6)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C7,5 7,12 2,13-2,14-3,8-2,3Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2.5" class="dk"/></g><g transform="translate(60,50)scale(0.7)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2.5" class="dk"/></g><g transform="translate(-65,60)scale(0.5)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2" class="dk"/></g><g transform="translate(55,-65)scale(0.45)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2" class="dk"/></g></g></svg>' },
+  { name:'方胜纹 · 传统', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><rect x="-95" y="-95" width="190" height="190" class="li" rx="4"/><path class="co li" d="M0,-75L65,-25L65,25L0,75L-65,25L-65,-25Z"/><path class="co li" d="M0,-55L50,-15L50,15L0,55L-50,15L-50,-15Z"/><circle cx="0" cy="0" r="15" class="li"/><circle cx="0" cy="0" r="8" class="co"/><rect x="-88" y="-88" width="12" height="12" class="co" rx="1"/><rect x="76" y="-88" width="12" height="12" class="co" rx="1"/><rect x="-88" y="76" width="12" height="12" class="co" rx="1"/><rect x="76" y="76" width="12" height="12" class="co" rx="1"/><path class="li" d="M0,-65L55,-20L55,20L0,65L-55,20L-55,-20Z" stroke-width="0.8" opacity="0.5"/></g></svg>' }
+];
+const LADY_SVG = `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg"><style>.cut{fill:var(--cut-color,#1a1820)}.dress{fill:var(--robe-color)}.hole{fill:var(--bg,#f5f0e8)}.line{stroke:var(--cut-color,#1a1820);stroke-width:1.5;fill:none}</style>
+<!-- Circular frame / 团扇外框 -->
+<circle cx="150" cy="250" r="230" fill="none" stroke="var(--cut-color,#1a1820)" stroke-width="2" opacity="0.3"/>
+<circle cx="150" cy="250" r="220" fill="none" stroke="var(--cut-color,#1a1820)" stroke-width="1" opacity="0.15"/>
+
+<!-- === Full figure silhouette === -->
+<g transform="translate(150,260)">
+  <!-- Hair bun / 发髻 -->
+  <path class="cut" d="M-28,-150 C-28,-175 -20,-190 0,-195 C20,-190 28,-175 28,-150 C28,-165 18,-175 0,-178 C-18,-175 -28,-165 -28,-150 Z"/>
+  <path class="cut" d="M0,-195 C-5,-202 -2,-208 3,-210 C8,-208 10,-202 5,-198 Z"/>
+
+  <!-- Head silhouette / 头部剪影 -->
+  <ellipse cx="0" cy="-120" rx="30" ry="36" class="cut"/>
+
+  <!-- Neck / 颈 -->
+  <rect x="-8" y="-86" width="16" height="18" class="cut" rx="3"/>
+
+  <!-- === Dress / 衣裙 (colored area) === -->
+  <path class="dress" d="M-48,-70 C-52,-30 -55,20 -58,80 C-58,120 -50,165 -40,190 L40,190 C50,165 58,120 58,80 C55,20 52,-30 48,-70 Z"/>
+  <!-- Upper robe / 上衣 -->
+  <path class="dress" d="M-44,-70 C-38,-90 -22,-98 -14,-102 L14,-102 C22,-98 38,-90 44,-70 Z"/>
+  <!-- Sleeves / 双袖 -->
+  <path class="dress" d="M-44,-70 C-60,-60 -80,-55 -95,-50 C-98,-47 -96,-44 -90,-46 C-78,-52 -60,-58 -42,-62 Z"/>
+  <path class="dress" d="M44,-70 C60,-60 80,-55 95,-50 C98,-47 96,-44 90,-46 C78,-52 60,-58 42,-62 Z"/>
+
+  <!-- === Paper-cut decorative cutouts on dress / 衣裙镂空花纹 === -->
+  <!-- Skirt pattern - upper band -->
+  <path class="hole" d="M-30,-55 C-20,-50 20,-50 30,-55 C20,-48 -20,-48 -30,-55 Z"/>
+  <path class="hole" d="M-25,-30 C-15,-26 15,-26 25,-30 C15,-24 -15,-24 -25,-30 Z"/>
+  <!-- Diamond cutouts -->
+  <path class="hole" d="M-35,0 L-30,8 L-25,0 L-30,-8 Z"/>
+  <path class="hole" d="M35,0 L30,8 L25,0 L30,-8 Z"/>
+  <path class="hole" d="M-38,40 L-33,48 L-28,40 L-33,32 Z"/>
+  <path class="hole" d="M38,40 L33,48 L28,40 L33,32 Z"/>
+  <!-- Bottom wave pattern -->
+  <path class="hole" d="M-20,130 Q-10,125 0,130 Q10,125 20,130 Q10,135 0,130 Q-10,135 -20,130 Z"/>
+  <path class="hole" d="M-20,150 Q-10,145 0,150 Q10,145 20,150 Q10,155 0,150 Q-10,155 -20,150 Z"/>
+  <!-- Circle cutouts on sleeves -->
+  <circle cx="-75" cy="-55" r="6" class="hole"/>
+  <circle cx="75" cy="-55" r="6" class="hole"/>
+  <circle cx="-80" cy="-48" r="3" class="hole"/>
+  <circle cx="80" cy="-48" r="3" class="hole"/>
+
+  <!-- === Pibo / 披帛 - flowing scarf (colored) === -->
+  <path class="dress" d="M-40,-82 C-65,-88 -85,-78 -100,-68 C-105,-65 -108,-62 -105,-58 C-100,-56 -95,-58 -88,-62 C-78,-70 -60,-80 -42,-78 Z"/>
+  <path class="dress" d="M40,-82 C65,-88 85,-78 100,-68 C105,-65 108,-62 105,-58 C100,-56 95,-58 88,-62 C78,-70 60,-80 42,-78 Z"/>
+  <!-- Trailing ends -->
+  <path class="dress" d="M-100,-68 C-115,-55 -125,-48 -130,-50 C-128,-54 -120,-58 -110,-62 Z"/>
+  <path class="dress" d="M100,-68 C115,-55 125,-48 130,-50 C128,-54 120,-58 110,-62 Z"/>
+
+  <!-- === Face cutouts / 脸部镂空 === -->
+  <!-- Willow leaf eyebrows -->
+  <path class="hole" d="M-12,-128 C-9,-131 -5,-132 -2,-130 M2,-130 C5,-132 9,-131 12,-128" stroke-width="1.5"/>
+  <!-- Phoenix eyes -->
+  <path class="hole" d="M-12,-124 C-9,-126 -4,-126 -1,-123"/>
+  <path class="hole" d="M1,-123 C4,-126 9,-126 12,-124"/>
+  <!-- Nose -->
+  <path class="hole" d="M0,-120 C-1,-117 -1,-114 0,-112 C-2,-113 -3,-114 -3,-115" stroke-width="1"/>
+  <!-- Mouth -->
+  <path class="hole" d="M-3,-108 C0,-106 3,-108" stroke-width="1"/>
+  <!-- Huadian (forehead decoration) -->
+  <circle cx="0" cy="-132" r="2" class="hole"/>
+
+  <!-- === Hair ornaments / 发饰 cutouts === -->
+  <circle cx="-15" cy="-170" r="4" class="hole"/>
+  <circle cx="15" cy="-168" r="3.5" class="hole"/>
+  <circle cx="-18" cy="-162" r="2.5" class="hole"/>
+  <circle cx="18" cy="-160" r="2" class="hole"/>
+  <!-- Hairpin -->
+  <path class="line" d="M-10,-182 L-18,-172" stroke-width="2"/>
+  <circle cx="-19" cy="-171" r="3" class="hole"/>
+
+  <!-- === Hand fan / 团扇 === -->
+  <circle cx="-80" cy="-20" r="35" class="hole" opacity="0.8"/>
+  <circle cx="-80" cy="-20" r="28" class="cut" opacity="0.3"/>
+  <circle cx="-80" cy="-20" r="25" fill="var(--bg,#f5f0e8)" opacity="0.6"/>
+  <!-- Fan handle -->
+  <path class="line" d="M-70,15 L-62,30"/>
+  <!-- Fan pattern -->
+  <path class="line" d="M-90,-20 C-85,-15 -80,-12 -75,-15"/>
+  <path class="line" d="M-70,-20 C-75,-15 -80,-12 -85,-15"/>
+
+  <!-- === Ground line / 地面线 === -->
+  <path class="line" d="M-70,190 L70,190" stroke-width="1" opacity="0.4"/>
+
+  <!-- === Decorative plum blossoms / 梅花点缀 === -->
+  <g opacity="0.4" transform="translate(-130,-160)">
+    <circle cx="0" cy="-5" r="5" class="hole"/>
+    <circle cx="5" cy="-1" r="5" class="hole"/>
+    <circle cx="3" cy="4" r="5" class="hole"/>
+    <circle cx="-3" cy="4" r="5" class="hole"/>
+    <circle cx="-5" cy="-1" r="5" class="hole"/>
+    <circle cx="0" cy="0" r="2" class="hole"/>
+  </g>
+  <g opacity="0.3" transform="translate(120,-130) scale(0.7)">
+    <circle cx="0" cy="-5" r="5" class="hole"/>
+    <circle cx="5" cy="-1" r="5" class="hole"/>
+    <circle cx="3" cy="4" r="5" class="hole"/>
+    <circle cx="-3" cy="4" r="5" class="hole"/>
+    <circle cx="-5" cy="-1" r="5" class="hole"/>
+    <circle cx="0" cy="0" r="2" class="hole"/>
+  </g>
+
+  <!-- === Decorative cloud / 祥云 === -->
+  <g opacity="0.2">
+    <path class="cut" d="M-140,50 C-130,40 -115,45 -110,35 C-105,25 -95,30 -90,40 C-85,32 -73,38 -78,50 Z"/>
+    <path class="cut" d="M140,50 C130,40 115,45 110,35 C105,25 95,30 90,40 C85,32 73,38 78,50 Z"/>
+  </g>
+</g></svg>`;
+
+function ladySvg() { return LADY_SVG; }
+
+// ====== Real Classical Paintings ======
+const PAINTINGS = [
+  { name:'簪花仕女图 · 周昉', file:'zanhua.jpg', age:'唐代',
+    maskT:28, maskS:40, maskE:93, maskB:100 },
+  { name:'虢国夫人游春图 · 张萱', file:'youchun.jpg', age:'唐代',
+    maskT:22, maskS:35, maskE:92, maskB:100 },
+  { name:'宫女图 · 刘松年', file:'gongnv.jpg', age:'宋代',
+    maskT:18, maskS:30, maskE:95, maskB:100 },
+  { name:'天女献花图 · 刘松年', file:'tiannv.jpg', age:'宋代',
+    maskT:25, maskS:38, maskE:92, maskB:100 }
+];
+
+// ====== State ======
+let currentId = 'zhuhong';
+let activeFamily = 'all';
+let displayMode = 'paintings';
+let filteredColors = [...COLORS];
+const carouselEl = document.getElementById('carousel');
+const carouselWrap = document.querySelector('.carousel-wrap');
+let mouseOffsetRotate = 0;
+const colorGrid = document.getElementById('colorGrid');
+const filterGroup = document.getElementById('filterGroup');
+const searchInput = document.getElementById('searchInput');
+const currentName = document.getElementById('currentName');
+const currentHex = document.getElementById('currentHex');
+const currentDesc = document.getElementById('currentDesc');
+const relatedChips = document.getElementById('relatedChips');
+const paletteRow = document.getElementById('paletteRow');
+const modeBtn = document.getElementById('modeBtn');
+
+// ====== Carousel 3D with Paintings ======
+let rotationY = 0, isDragging = false, prevX = 0, velocity = 0, rafId = null;
+
+function getCurrentData() {
+  return displayMode === 'paintings' ? PAINTINGS : PATTERNS;
+}
+
+function buildCarousel() {
+  const data = getCurrentData();
+  const step = 360 / data.length;
+  carouselEl.innerHTML = '';
+  data.forEach((p, i) => {
+    const angle = i * step;
+    const card = document.createElement('div');
+    card.className = 'carousel-card';
+    card.dataset.angle = angle;
+    if (p.svg) {
+      card.innerHTML = p.svg + `<div class="lady-name">${p.name}</div>`;
+    } else {
+      const mask = `linear-gradient(to bottom, transparent ${p.maskT}%, black ${p.maskS}%, black ${p.maskE}%, transparent ${p.maskB}%)`;
+      card.innerHTML = `
+        <div class="img-wrap">
+          <img src="${p.file}" alt="${p.name}" draggable="false" loading="lazy">
+          <div class="color-overlay" style="-webkit-mask-image:${mask};mask-image:${mask}"></div>
+          <div class="painting-name">${p.name}</div>
+        </div>`;
+    }
+    carouselEl.appendChild(card);
+  });
+  updateCarouselRotation();
+}
+
+function updateCardDepth() {
+  const r = getComputedStyle(document.documentElement).getPropertyValue('--radius').trim();
+  const radius = parseInt(r) || 380;
+  const cards = carouselEl.querySelectorAll('.carousel-card');
+  cards.forEach(card => {
+    const angle = parseFloat(card.dataset.angle);
+    if (isNaN(angle)) return;
+    const rad = (angle + rotationY + mouseOffsetRotate) * Math.PI / 180;
+    const depth = Math.cos(rad) * 0.5 + 0.5;
+    const scale = 0.88 + 0.17 * depth;
+    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${scale})`;
+    card.style.opacity = 0.7 + 0.3 * depth;
+    card.style.zIndex = Math.round(depth * 100);
+  });
+}
+
+function updateCarouselRotation() {
+  carouselEl.style.transform = `rotateY(${rotationY + mouseOffsetRotate}deg)`;
+  updateCardDepth();
+}
+
+carouselEl.addEventListener('mousedown', e => {
+  isDragging = true; prevX = e.clientX;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+});
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - prevX;
+  rotationY += dx * 0.5; prevX = e.clientX; velocity = dx * 0.3;
+  updateCarouselRotation();
+});
+document.addEventListener('mouseup', () => {
+  if (isDragging) { isDragging = false; startAutoRotate(); }
+});
+
+carouselEl.addEventListener('touchstart', e => {
+  const t = e.touches[0]; isDragging = true; prevX = t.clientX;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}, {passive:true});
+carouselEl.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - prevX;
+  rotationY += dx * 0.5; prevX = e.touches[0].clientX; velocity = dx * 0.3;
+  updateCarouselRotation();
+}, {passive:true});
+carouselEl.addEventListener('touchend', () => {
+  if (isDragging) { isDragging = false; startAutoRotate(); }
+}, {passive:true});
+
+// Mouse parallax — subtle rotation nudge
+carouselWrap.addEventListener('mousemove', e => {
+  if (isDragging) return;
+  const rect = carouselWrap.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  mouseOffsetRotate = x * 4;
+});
+carouselWrap.addEventListener('mouseleave', () => { mouseOffsetRotate = 0; });
+
+const BASE_SPEED = 0.12;
+
+function startAutoRotate() {
+  if (rafId) cancelAnimationFrame(rafId);
+  function step() {
+    velocity += (BASE_SPEED - velocity) * 0.015;
+    rotationY += velocity;
+    updateCarouselRotation();
+    rafId = requestAnimationFrame(step);
+  }
+  rafId = requestAnimationFrame(step);
+}
+
+// ====== Mode Toggle ======
+function toggleMode() {
+  displayMode = displayMode === 'paintings' ? 'patterns' : 'paintings';
+  modeBtn.textContent = displayMode === 'paintings' ? '🏺 画作' : '🎨 纹样';
+  buildCarousel();
+}
+modeBtn.addEventListener('click', toggleMode);
+
+// ====== Filter & Grid ======
+const FAMILIES = ['红','黄','青','紫','白','黑','褐'];
+
+function buildFilters() {
+  FAMILIES.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn'; btn.dataset.family = f;
+    btn.textContent = f;
+    btn.addEventListener('click', () => setFilter(f));
+    filterGroup.appendChild(btn);
+  });
+}
+
+function setFilter(family) {
+  activeFamily = family;
+  document.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.family === family));
+  applyFilters();
+}
+
+function applyFilters() {
+  let list = [...COLORS];
+  if (activeFamily !== 'all') list = list.filter(c => c.family === activeFamily);
+  const kw = searchInput.value.trim();
+  if (kw) list = list.filter(c => c.name.includes(kw));
+  filteredColors = list;
+  renderGrid();
+  document.getElementById('totalCount').textContent = filteredColors.length;
+}
+
+function renderGrid() {
+  colorGrid.innerHTML = '';
+  filteredColors.forEach(c => {
+    const card = document.createElement('div');
+    card.className = `color-card${c.id === currentId ? ' active' : ''}`;
+    card.innerHTML = `
+      <div class="color-swatch" style="background:${c.hex}"></div>
+      <div class="info"><div class="cname">${renderColorName(c)}</div><div class="cfamily">${c.family}</div></div>`;
+    card.addEventListener('click', () => selectColor(c.id));
+    colorGrid.appendChild(card);
+  });
+}
+
+function renderColorName(c) {
+  return c.p ? '<ruby>' + c.name + '<rt>' + c.p + '</rt></ruby>' : c.name;
+}
+
+// ====== Palette ======
+const FAMILY_ORDER = ['红','黄','青','紫','白','黑','褐'];
+function getPalette(color) {
+  const idx = FAMILY_ORDER.indexOf(color.family);
+  const families = [];
+  const compIdx = (idx + 3) % FAMILY_ORDER.length;
+  families.push(FAMILY_ORDER[compIdx]);
+  families.push(FAMILY_ORDER[(idx + 1) % FAMILY_ORDER.length]);
+  const warm = ['红','黄','褐'], cool = ['青','紫'];
+  warm.includes(color.family) ? families.push(...cool) : families.push(...warm);
+  families.push('白','黑');
+  const pool = [], used = new Set([color.id]);
+  for (const f of families) {
+    const c = COLORS.filter(x => x.family === f && !used.has(x.id));
+    if (c.length) { const p = c[Math.floor(Math.random() * Math.min(c.length, 3))]; if (p) { pool.push(p); used.add(p.id); } }
+  }
+  if (pool.length < 5) {
+    const rest = COLORS.filter(x => !used.has(x.id)).sort(() => Math.random() - 0.5);
+    for (const r of rest) { if (pool.length >= 5) break; pool.push(r); }
+  }
+  return pool.slice(0, 5);
+}
+
+// ====== Select Color ======
+function selectColor(id) {
+  const c = COLORS.find(x => x.id === id);
+  if (!c) return;
+  currentId = id;
+  document.documentElement.style.setProperty('--robe-color', c.hex);
+  currentName.innerHTML = renderColorName(c);
+  currentHex.textContent = c.hex;
+  currentDesc.textContent = c.desc;
+  const same = COLORS.filter(x => x.family === c.family && x.id !== id);
+  relatedChips.innerHTML = same.map(x =>
+    `<span class="related-chip" onclick="selectColor('${x.id}')">
+      <span class="dot" style="background:${x.hex}"></span>${x.name}
+    </span>`).join('');
+  // Palette
+  const palette = getPalette(c);
+  palette.forEach((p, i) => document.documentElement.style.setProperty('--dot-color-' + i, p.hex));
+  paletteRow.innerHTML = palette.map(p =>
+    `<div class="palette-item-wrap">
+      <div class="palette-item" style="background:${p.hex}" onclick="selectColor('${p.id}')" title="${p.name}"></div>
+      <span class="palette-item-name">${p.name}</span>
+    </div>`
+  ).join('');
+  document.querySelectorAll('.color-card').forEach(card => {
+    const children = Array.from(colorGrid.children);
+    const idx = children.indexOf(card);
+    if (idx >= 0 && filteredColors[idx]) card.classList.toggle('active', filteredColors[idx].id === id);
+  });
+}
+
+searchInput.addEventListener('input', applyFilters);
+
+buildFilters();
+buildCarousel();
+renderGrid();
+selectColor(currentId);
+startAutoRotate();
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { buildCarousel(); }, 300);
+});
+
+// ═══ 孪生宇宙 ═══
+var SELF_PROJECT = 'chinese-colors';
+var PROJECTS_URL = 'https://yun-ai-base.github.io/psychscope/projects.json';
+var TWIN_CATS = {
+  ai:       { label: 'AI 对话',   emoji: '🤖' },
+  tool:     { label: '工具',      emoji: '🛠️' },
+  content:  { label: '内容精选',  emoji: '📖' }
+};
+var TWIN_ORDER = ['ai', 'tool', 'content'];
+var twinBuilt = false;
+
+function toggleTwin() {
+  var v = document.getElementById('twinView');
+  v.classList.toggle('open');
+  document.body.style.overflow = v.classList.contains('open') ? 'hidden' : '';
+  if (v.classList.contains('open') && !twinBuilt) {
+    twinBuilt = true;
+    buildTwin();
+  }
+}
+
+function buildTwin() {
+  var container = document.getElementById('twinContainer');
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', PROJECTS_URL, true);
+  xhr.onload = function () {
+    if (xhr.status !== 200) return;
+    try {
+      var all = JSON.parse(xhr.responseText);
+      var projects = all.filter(function (p) { return p.name !== SELF_PROJECT; });
+      var byCat = {};
+      projects.forEach(function (s) { (byCat[s.cat] = byCat[s.cat] || []).push(s); });
+      var html = '';
+      TWIN_ORDER.forEach(function (cat) {
+        var list = byCat[cat];
+        if (!list) return;
+        var info = TWIN_CATS[cat];
+        html += '<div class="twin-section">'
+             + '<div class="twin-section-title">' + info.emoji + ' ' + info.label + '</div>'
+             + '<div class="twin-grid">';
+        list.forEach(function (s) {
+          html += '<a class="twin-card" href="https://yun-ai-base.github.io/' + encodeURIComponent(s.name) + '/" target="_blank" rel="noopener">'
+               + '<span class="twin-card-icon">' + s.icon + '</span>'
+               + '<span class="twin-card-info">'
+               + '<span class="twin-card-name">' + escHtml(s.name) + '</span>'
+               + '<span class="twin-card-desc">' + escHtml(s.desc) + '</span>'
+               + '</span>'
+               + '<span class="twin-card-arrow">→</span>'
+               + '</a>';
+        });
+        html += '</div></div>';
+      });
+      container.innerHTML = html;
+    } catch (e) {}
+  };
+  xhr.send();
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(s));
+  return d.innerHTML;
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && document.getElementById('twinView').classList.contains('open')) {
+    toggleTwin();
+  }
+});
+</script>
+</body>
+</html>
