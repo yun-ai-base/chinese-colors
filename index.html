@@ -87,12 +87,14 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
 .mode-btn:hover{border-color:var(--accent);color:var(--accent)}
 .mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .grid-wrap{flex:1;overflow-y:auto;padding:10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px}
-.color-card{border-radius:8px;overflow:hidden;background:var(--card-bg);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 2px 8px var(--shadow);border:2px solid transparent}
-.color-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:14px}
+.color-card{border-radius:14px;background:var(--card-bg);cursor:pointer;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 2px 8px var(--shadow);border:2px solid transparent;padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center}
+.color-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px var(--shadow)}
 .color-card.active{border-color:var(--accent)}
-.color-swatch{height:65px;transition:background 0.3s}
-.color-card .info{padding:8px 6px;text-align:center}
+.color-swatch{width:82px;height:82px;border-radius:50%;transition:background 0.3s;position:relative;box-shadow:0 6px 16px rgba(0,0,0,0.15),0 2px 4px rgba(0,0,0,0.1),inset 0 -3px 6px rgba(0,0,0,0.08);flex-shrink:0}
+.color-swatch::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.12) 20%,transparent 45%,rgba(0,0,0,0.12) 70%,rgba(0,0,0,0.35) 100%);pointer-events:none}
+.color-swatch::after{content:'';position:absolute;top:7%;left:20%;width:28%;height:18%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,0.6) 0%,transparent 70%);pointer-events:none}
+.color-card .info{padding:6px 4px 0;text-align:center}
 .color-card .info .cname{font-size:14px;font-weight:700;letter-spacing:1px}
 .color-card .info .cname ruby{text-decoration:none}
 .color-card .info .cname rt{font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0}
@@ -137,8 +139,9 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   .info-panel{padding:8px 0}
   .color-name-row .name{font-size:22px}
   .right-panel{height:auto;max-height:55vh}
-  .grid{grid-template-columns:repeat(2,1fr);gap:6px}
-  .color-swatch{height:50px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .color-card{padding:12px 4px 8px}
+  .color-swatch{width:64px;height:64px}
   .palette-item{width:30px;height:30px}
   .palette-item-name{font-size:9px;max-width:34px}
   header h1{font-size:18px}
@@ -154,8 +157,9 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   .carousel{width:170px;height:185px}
   .carousel-card{width:156px;height:171px;left:7px;top:7px}
   :root{--radius:160px}
-  .grid{grid-template-columns:repeat(2,1fr);gap:5px}
-  .color-swatch{height:45px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .color-card{padding:10px 4px 6px}
+  .color-swatch{width:52px;height:52px}
   .palette-item{width:26px;height:26px}
   .palette-item-name{font-size:8px;max-width:30px}
 }
@@ -655,6 +659,8 @@ function selectColor(id) {
 }
 
 searchInput.addEventListener('input', applyFilters);
+
+document.querySelector('.filter-btn[data-family="all"]').addEventListener('click', () => setFilter('all'));
 
 buildFilters();
 buildCarousel();
