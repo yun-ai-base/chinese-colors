@@ -39,9 +39,7 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
 .carousel-card .robe{transition:fill 0.5s ease}
 
 /* Info panel */
-.info-panel{width:100%;max-width:420px;flex-shrink:0;padding:12px 0 4px;text-align:center;position:relative}
-.info-panel::before{content:'';display:block;width:70%;height:5px;border-radius:3px;margin:0 auto 10px;background:var(--robe-color);transition:background .5s}
-.info-panel::after{content:'';position:absolute;top:9px;left:15%;width:9px;height:9px;border-radius:50%;background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;box-shadow:0 0 10px var(--dot-color-0,var(--robe-color))}
+.info-panel{width:100%;text-align:center}
 @keyframes bounceDot{
 0%{left:15%;background:var(--dot-color-0,var(--robe-color));box-shadow:0 0 10px var(--dot-color-0,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
 12%{transform:scaleX(1.05) scaleY(.95)}
@@ -53,6 +51,22 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
 87%{transform:scaleX(1.05) scaleY(.95)}
 100%{left:15%;background:var(--dot-color-4,var(--robe-color));box-shadow:0 0 10px var(--dot-color-4,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
 }
+/* Flip card */
+.flip-wrap{perspective:800px;width:100%;max-width:420px;flex-shrink:0;padding:12px 0 4px;position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}
+.flip-wrap::before{content:'';display:block;width:70%;height:5px;border-radius:3px;margin:0 auto 10px;background:var(--robe-color);transition:background .5s}
+.flip-wrap::after{content:'';position:absolute;top:9px;left:15%;width:9px;height:9px;border-radius:50%;background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;box-shadow:0 0 10px var(--dot-color-0,var(--robe-color))}
+.flip-inner{position:relative;width:100%;min-height:190px;transition:transform .6s ease;transform-style:preserve-3d}
+.flip-wrap.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:relative;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
+.flip-back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8px 12px;overflow-y:auto}
+.flip-back .back-poem{font-size:15px;color:#6a5a4a;line-height:1.8;font-style:italic;letter-spacing:1px;max-width:380px;margin-bottom:10px;position:relative;padding:0 10px}
+.flip-back .back-poem::before{content:'「';color:var(--accent);font-size:18px;opacity:.5}
+.flip-back .back-poem::after{content:'」';color:var(--accent);font-size:18px;opacity:.5}
+.flip-back .back-object{font-size:13px;color:var(--muted);line-height:1.6;letter-spacing:1px;max-width:380px;padding:8px 14px;background:rgba(192,57,43,.04);border-radius:8px;border:1px solid rgba(192,57,43,.1)}
+.flip-back .back-object-label{font-size:11px;color:var(--muted);letter-spacing:2px;margin:4px 0 2px}
+.flip-back .back-empty{font-size:13px;color:var(--muted);font-style:italic;letter-spacing:1px}
+.flip-hint{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:4px;opacity:.5;transition:opacity .3s}
+.flip-wrap:hover .flip-hint{opacity:.8}
 .color-name-row{display:flex;justify-content:center;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap}
 .color-name-row .name{font-size:26px;font-weight:700;letter-spacing:4px}
 .color-name-row .name ruby{text-decoration:none}
@@ -136,7 +150,6 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   .carousel{width:200px;height:210px}
   .carousel-card{width:185px;height:195px;left:7.5px;top:7.5px}
   :root{--radius:180px}
-  .info-panel{padding:8px 0}
   .color-name-row .name{font-size:22px}
   .right-panel{height:auto;max-height:55vh}
   .grid{grid-template-columns:repeat(2,1fr);gap:10px}
@@ -178,17 +191,29 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
       <div class="carousel-wrap">
         <div class="carousel" id="carousel"></div>
       </div>
-      <div class="info-panel">
-        <div class="color-name-row">
-          <span class="name" id="currentName">朱红</span>
-          <span class="hex" id="currentHex">#FF4C00</span>
-        </div>
-        <div class="color-desc" id="currentDesc">正红色，介于红与橙之间，传统吉祥色。</div>
-        <div class="related-label">— 同系颜色 —</div>
-        <div class="related-chips" id="relatedChips"></div>
-        <div class="palette-section">
-          <div class="palette-label">— 配色灵感 —</div>
-          <div class="palette-row" id="paletteRow"></div>
+      <div class="flip-wrap" id="infoPanel">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div class="info-panel">
+              <div class="color-name-row">
+                <span class="name" id="currentName">朱红</span>
+                <span class="hex" id="currentHex">#FF4C00</span>
+              </div>
+              <div class="color-desc" id="currentDesc">正红色，介于红与橙之间，传统吉祥色。</div>
+              <div class="related-label">— 同系颜色 —</div>
+              <div class="related-chips" id="relatedChips"></div>
+              <div class="palette-section">
+                <div class="palette-label">— 配色灵感 —</div>
+                <div class="palette-row" id="paletteRow"></div>
+              </div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-poem" id="backPoem"></div>
+            <div class="back-object-label">— 对应实物 —</div>
+            <div class="back-object" id="backObject"></div>
+            <div class="flip-hint">点击翻回</div>
+          </div>
         </div>
       </div>
     </div>
@@ -227,74 +252,74 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
 </div>
 
 <script>
-const COLORS = [
-  {id:'jiang',name:'绛',p:'jiàng',family:'红',hex:'#8B1A1A',desc:'大红色，比朱红更深，古时常用作礼服色。'},
-  {id:'zhuhong',name:'朱红',family:'红',hex:'#FF4C00',desc:'正红色，介于红与橙之间，传统吉祥色。'},
-  {id:'yanzhi',name:'胭脂',p:'yān zhī',family:'红',hex:'#C72C48',desc:'女子化妆用的深粉红色，取自胭脂花。'},
-  {id:'zhongguohong',name:'中国红',family:'红',hex:'#D32F2F',desc:'中国人最喜爱的喜庆正红色，象征热情与繁荣。'},
-  {id:'taohong',name:'桃红',family:'红',hex:'#F47983',desc:'桃花般的粉红色，娇艳明媚。'},
-  {id:'shiliuhong',name:'石榴红',family:'红',hex:'#D9383A',desc:'石榴花的鲜红色，浓郁热烈。'},
-  {id:'tuoyan',name:'酡颜',p:'tuó yán',family:'红',hex:'#F08080',desc:'饮酒后脸上泛起的红晕，微醺之色。'},
-  {id:'haitianxia',name:'海天霞',family:'红',hex:'#E8C4B8',desc:'明代宫廷流行色，似白而微红，如海上朝霞。'},
-  {id:'shuse',name:'曙色',family:'红',hex:'#E8845C',desc:'清晨破晓时红黄相间的天色，温暖明亮。'},
-  {id:'sufang',name:'苏芳',p:'sū fāng',family:'红',hex:'#8B3A62',desc:'源自苏木染出的深红色，深沉古典。'},
-  {id:'xunhuang',name:'纁黄',p:'xūn huáng',family:'红',hex:'#D4693A',desc:'太阳落山后余光折射的橙红色，与"玄"相对。'},
-  {id:'qianse',name:'茜色',p:'qiàn sè',family:'红',hex:'#B74141',desc:'茜草根染出的深红色，古代最重要的红色染料之一。'},
-  {id:'yinhong',name:'银红',family:'红',hex:'#D98989',desc:'银朱调和而成的粉红色，明代服饰常见色。'},
-  {id:'shuihong',name:'水红',family:'红',hex:'#E8B0B0',desc:'淡如水的浅红，清透温润。'},
-  {id:'feihong',name:'妃红',family:'红',hex:'#D69B9B',desc:'淡粉红色，唐制妃嫔常服之色。'},
-  {id:'haitanghong',name:'海棠红',family:'红',hex:'#D45D5D',desc:'海棠花开的淡紫红色，"海棠不惜胭脂色"。'},
-  {id:'tanse',name:'檀色',family:'红',hex:'#B87070',desc:'浅紫红色，如檀木之色，沉稳温柔。'},
-  {id:'xiangse',name:'缃色',p:'xiāng sè',family:'黄',hex:'#EDD9A0',desc:'浅黄色，如初生桑叶之色。'},
-  {id:'xiangye',name:'缃叶',p:'xiāng yè',family:'黄',hex:'#E8D48B',desc:'同"缃色"，特指桑叶初生的淡黄。'},
-  {id:'zhizi',name:'栀子',family:'黄',hex:'#F0D060',desc:'用栀子果实染出的黄色，偏暖。'},
-  {id:'nenehuang',name:'嫩鹅黄',family:'黄',hex:'#FDEAA8',desc:'小鹅绒毛的淡黄色，鲜嫩可爱。'},
-  {id:'ehuang',name:'鹅黄',family:'黄',hex:'#FFE55C',desc:'小鹅的黄色，较嫩鹅黄略明亮。'},
-  {id:'songhua',name:'松花',family:'黄',hex:'#F5E6A3',desc:'松花粉的淡黄色，轻淡柔和。'},
-  {id:'huangheliuli',name:'黄河琉璃',family:'黄',hex:'#E8B830',desc:'日光照耀下黄河水如同黄琉璃般璀璨。'},
-  {id:'boshi',name:'薄柿',family:'黄',hex:'#E8A860',desc:'未熟柿子的淡橘黄色，质朴温暖。'},
-  {id:'qiuxiangse',name:'秋香色',family:'黄',hex:'#C4A84C',desc:'秋日草木的黄绿色调，稳重大气，《红楼梦》中多见。'},
-  {id:'hupo',name:'琥珀',family:'黄',hex:'#C8763A',desc:'琥珀树脂的暖棕黄色，温润通透。'},
-  {id:'mihese',name:'蜜合色',family:'黄',hex:'#E8C878',desc:'淡黄微红的柔和暖色，如蜜调和。'},
-  {id:'tianpiao',name:'天缥',p:'tiān piǎo',family:'青',hex:'#C8E0E8',desc:'如雨过天青的浅青色，清透淡雅。'},
-  {id:'zhuqing',name:'竹青',family:'青',hex:'#78A87C',desc:'竹子表面的青绿色，生机盎然。'},
-  {id:'gunqing',name:'群青',family:'青',hex:'#2E4E8E',desc:'鲜艳的深蓝色，古代因原料珍贵而价值堪比黄金。'},
-  {id:'tianqing',name:'天青',family:'青',hex:'#68A0C8',desc:'雨后天空的青色，纯净致远。'},
-  {id:'canglang',name:'沧浪',family:'青',hex:'#5CA8A8',desc:'水色，青绿色，出自《孟子》"沧浪之水清兮"。'},
-  {id:'tianshuibi',name:'天水碧',family:'青',hex:'#80B0B8',desc:'南唐后主李煜的姬妾所染，如秋水澄澈。'},
-  {id:'piaose',name:'缥色',p:'piǎo sè',family:'青',hex:'#B8D0D8',desc:'淡青色，常与"缃"对举，指代书卷。'},
-  {id:'zhuyue',name:'竹月',family:'青',hex:'#486878',desc:'竹林中月光的淡蓝色，清冷寂寥。'},
-  {id:'qiaoxiachunbo',name:'桥下春波',family:'青',hex:'#6AA08A',desc:'春日桥下清波的蓝绿色，充满诗意。'},
-  {id:'ruocao',name:'若草',family:'青',hex:'#A8C868',desc:'如初生嫩草般的黄绿色，充满生机。'},
-  {id:'qingmeizhujiu',name:'青梅煮酒',family:'青',hex:'#8AA868',desc:'青梅与黄酒交融的青黄色，典故出自《三国演义》。'},
-  {id:'dianlan',name:'靛蓝',p:'diàn lán',family:'青',hex:'#1E3A5F',desc:'蓝草制靛染出的深蓝色，中国传统染料代表之一。'},
-  {id:'dailan',name:'黛蓝',p:'dài lán',family:'青',hex:'#2A4070',desc:'深蓝带青，远山如黛之色。'},
-  {id:'douqing',name:'豆青',family:'青',hex:'#90B87A',desc:'青瓷的淡青绿色，温润如玉。'},
-  {id:'liulv',name:'柳绿',family:'青',hex:'#68A84A',desc:'春日新柳的嫩绿色，鲜嫩明快。'},
-  {id:'aiqing',name:'艾青',family:'青',hex:'#688058',desc:'艾草叶的苍绿色，古朴深沉。'},
-  {id:'shilv',name:'石绿',family:'青',hex:'#58A878',desc:'矿物颜料制绿色，敦煌壁画常用色。'},
-  {id:'yuanshanrudai',name:'远山如黛',family:'青',hex:'#4A5878',desc:'远山呈现的深青黑色，古代女子常用作画眉色。'},
-  {id:'tubai',name:'荼白',p:'tú bái',family:'白',hex:'#F0EDE4',desc:'如荼（一种白花）的白色，素净雅致。'},
-  {id:'yuebai',name:'月白',family:'白',hex:'#C8D8E8',desc:'带淡蓝调的白色，如月光般清冷。'},
-  {id:'ningzhi',name:'凝脂',family:'白',hex:'#F8F0E0',desc:'如凝固的油脂，形容肌肤白皙细腻，出自《诗经》。'},
-  {id:'gao',name:'缟',p:'gǎo',family:'白',hex:'#E8E0D0',desc:'未经染色的白绢之色，素朴本真。'},
-  {id:'xuanse',name:'玄色',p:'xuán sè',family:'黑',hex:'#1A1820',desc:'黑中带赤，指夜空之色，神秘庄重。'},
-  {id:'zise',name:'缁色',p:'zī sè',family:'黑',hex:'#2A2830',desc:'纯黑色，古时僧侣常服之色。'},
-  {id:'yaqing',name:'鸦青',family:'黑',hex:'#384048',desc:'黑中带紫绿光泽，如乌鸦羽毛之色。'},
-  {id:'xuantian',name:'玄天',p:'xuán tiān',family:'黑',hex:'#3A2840',desc:'黎明前黑中透红的天空色，太阳将出未出之际。'},
-  {id:'baicaoshuang',name:'百草霜',family:'黑',hex:'#484848',desc:'锅底上百种草烧完后形成的如霜灰烬之色。'},
-  {id:'yanse',name:'烟色',family:'黑',hex:'#686868',desc:'如烟雾般的灰棕色，朦胧淡雅。'},
-  {id:'zaose',name:'皂色',p:'zào sè',family:'黑',hex:'#303030',desc:'纯深黑灰色，古时官服与平民常服多见。'},
-  {id:'chenxiang',name:'沉香',family:'褐',hex:'#6A5040',desc:'沉香木的黄黑色，沉稳高级。'},
-  {id:'zheshi',name:'赭石',p:'zhě shí',family:'褐',hex:'#8B6048',desc:'红褐色矿物颜料，岩画与壁画中常用。'},
-  {id:'luoli',name:'落栗',family:'褐',hex:'#885848',desc:'栗壳的褐棕色，质朴温暖。'},
-  {id:'mushanzi',name:'暮山紫',family:'紫',hex:'#6A4A8A',desc:'夕阳薄雾笼罩远山时呈现的紫色，出自王勃《滕王阁序》。'},
-  {id:'ouhe',name:'藕荷',p:'ǒu hé',family:'紫',hex:'#C8A8C8',desc:'浅紫带粉红，淡雅温柔，常见于服饰。'},
-  {id:'zhizhu',name:'踯躅',p:'zhí zhú',family:'紫',hex:'#D48AA8',desc:'杜鹃花（踯躅花）的粉紫色，明艳动人。'},
-  {id:'qinglian',name:'青莲',family:'紫',hex:'#7858A8',desc:'偏蓝的淡紫色，如青莲花瓣，清雅高洁。'},
-  {id:'dingxiang',name:'丁香',family:'紫',hex:'#B8A0C0',desc:'丁香花的淡紫粉色，清雅含蓄。'},
-  {id:'dongfangjibai',name:'东方既白',family:'青',hex:'#A8C8E0',desc:'黎明时天空蓝中透白的颜色，出自苏轼《赤壁赋》。'},
-  {id:'meiran',name:'梅染',family:'红',hex:'#C8A098',desc:'用梅花树枝染就的颜色，清雅高洁。'}
+,poem:'',object:'梅花树枝染就的颜色',poem:'不知东方之既白',object:'黎明时蓝中透白的天空之色',poem:'',object:'丁香花的淡紫粉色',poem:'',object:'青莲花瓣的淡紫色',poem:'晚叶尚开红踯躅，秋芳初结白芙蓉',object:'杜鹃花（踯躅花）之色',poem:'',object:'莲藕煮熟后的淡紫粉色',poem:'烟光凝而暮山紫',object:'夕阳薄雾笼罩远山之紫色',poem:'',object:'栗壳的褐棕色',poem:'',object:'赤铁矿研制的颜料，敦煌岩画所用',poem:'',object:'沉香木的黄黑色，沉稳高级',poem:'',object:'古时官服与平民常服之色',poem:'',object:'如烟雾般的灰棕色',poem:'',object:'锅底百草灰烬如霜之色',poem:'',object:'黎明前黑中透红的天空之色',poem:'鸦青幕挂一团冰',object:'乌鸦羽毛黑中带紫绿光泽',poem:'',object:'僧侣常服之纯黑色',poem:'天地玄黄，宇宙洪荒',object:'黑中带赤的夜空之色',poem:'',object:'未经染色的白绢之色',poem:'手如柔荑，肤如凝脂',object:'凝固的油脂之色，形容白皙肌肤',poem:'凉生秋早，正梧桐院落，风清月白',object:'月光之清冷白色',poem:'',object:'荼（白花）之白色',poem:'',object:'远山的青黑色，古时女子画眉之色',poem:'',object:'孔雀石研磨的矿物颜料，千里江山图主色',poem:'',object:'艾草叶的苍绿色',poem:'',object:'春日新柳的嫩绿色',poem:'',object:'青瓷之淡青绿色，如玉温润',poem:'',object:'远山之深青蓝色',poem:'',object:'蓝草制靛染出，传统蓝染工艺',poem:'青梅煮酒论英雄',object:'青梅与黄酒交融之色',poem:'',object:'初生嫩草的黄绿色',poem:'伤心桥下春波绿，曾是惊鸿照影来',object:'春日桥下清波之色',poem:'竹月泛凉影',object:'竹林中月光之清冷色调',poem:'',object:'淡青色，常与缃对举指代书卷',poem:'天水碧，染就一江秋色',object:'南唐后主姬妾所染之色',poem:'沧浪之水清兮，可以濯我缨',object:'水之青绿色',poem:'雨过天青云破处，这般颜色做将来',object:'汝窑天青釉瓷器，宋代美学巅峰',poem:'',object:'青金石研磨而成，古代价比黄金',poem:'',object:'竹子表面的青绿色',poem:'',object:'雨过天青的浅青色',poem:'',object:'蜂蜜调和之色，淡黄微红',poem:'兰陵美酒郁金香，玉碗盛来琥珀光',object:'琥珀树脂的暖棕黄色',poem:'',object:'秋日草木黄绿色调，《红楼梦》中服饰色',poem:'',object:'未熟柿子的淡橘黄色',poem:'放眼三十里，日耀黄琉璃',object:'日光下黄河水如黄色琉璃瓦',poem:'',object:'松花粉的淡黄色',poem:'鹅黄雪白络新丝',object:'小鹅之黄色',poem:'',object:'小鹅绒毛的淡黄色',poem:'',object:'栀子果实染出的黄色',poem:'',object:'桑叶初生的淡黄色',poem:'词人才子，则名溢于缥囊；飞文染翰，则卷盈乎缃帙',object:'桑叶初生之淡黄色，古代书卷之色',poem:'',object:'檀木之色，沉稳温柔',poem:'海棠不惜胭脂色，独立蒙蒙细雨中',object:'海棠花之色',poem:'',object:'唐代妃嫔常服之色',poem:'',object:'淡如水的浅红色，薄纱之色',poem:'',object:'银朱（硫化汞）调和而成的粉红',poem:'缟衣茹茜，聊可与娱',object:'茜草根染出的红色，最古老的植物染料之一',poem:'',object:'太阳落下地平线后的余光之色',poem:'',object:'苏木染出的深红，唐代织物常见',poem:'',object:'清晨破晓时东方的天色',poem:'海天霞色上轻罗',object:'明代宫廷织造的罗裙色',poem:'彩袖殷勤捧玉钟，当年拚却醉颜红',object:'饮酒后脸上泛起的红晕',poem:'',object:'石榴花之色，唐代女裙流行色',poem:'去年今日此门中，人面桃花相映红',object:'桃花花瓣之色',poem:'',object:'中国国旗色，春节对联灯笼之色',poem:'海棠不惜胭脂色，独立蒙蒙细雨中',object:'胭脂花/红蓝花制，女子化妆与国画颜料',poem:'',object:'朱砂矿物颜料，古代建筑宫墙之色',poem:'',object:'古代礼服常用色，绛紫袍服为高官所着'const COLORS = [
+  {id:'jiang',name:'绛',p:'jiàng',family:'红',hex:'#8B1A1A',desc:'大红色，比朱红更深，古时常用作礼服色。'undefined,
+  {id:'zhuhong',name:'朱红',family:'红',hex:'#FF4C00',desc:'正红色，介于红与橙之间，传统吉祥色。'undefined,
+  {id:'yanzhi',name:'胭脂',p:'yān zhī',family:'红',hex:'#C72C48',desc:'女子化妆用的深粉红色，取自胭脂花。'undefined,
+  {id:'zhongguohong',name:'中国红',family:'红',hex:'#D32F2F',desc:'中国人最喜爱的喜庆正红色，象征热情与繁荣。'undefined,
+  {id:'taohong',name:'桃红',family:'红',hex:'#F47983',desc:'桃花般的粉红色，娇艳明媚。'undefined,
+  {id:'shiliuhong',name:'石榴红',family:'红',hex:'#D9383A',desc:'石榴花的鲜红色，浓郁热烈。'undefined,
+  {id:'tuoyan',name:'酡颜',p:'tuó yán',family:'红',hex:'#F08080',desc:'饮酒后脸上泛起的红晕，微醺之色。'undefined,
+  {id:'haitianxia',name:'海天霞',family:'红',hex:'#E8C4B8',desc:'明代宫廷流行色，似白而微红，如海上朝霞。'undefined,
+  {id:'shuse',name:'曙色',family:'红',hex:'#E8845C',desc:'清晨破晓时红黄相间的天色，温暖明亮。'undefined,
+  {id:'sufang',name:'苏芳',p:'sū fāng',family:'红',hex:'#8B3A62',desc:'源自苏木染出的深红色，深沉古典。'undefined,
+  {id:'xunhuang',name:'纁黄',p:'xūn huáng',family:'红',hex:'#D4693A',desc:'太阳落山后余光折射的橙红色，与"玄"相对。'undefined,
+  {id:'qianse',name:'茜色',p:'qiàn sè',family:'红',hex:'#B74141',desc:'茜草根染出的深红色，古代最重要的红色染料之一。'undefined,
+  {id:'yinhong',name:'银红',family:'红',hex:'#D98989',desc:'银朱调和而成的粉红色，明代服饰常见色。'undefined,
+  {id:'shuihong',name:'水红',family:'红',hex:'#E8B0B0',desc:'淡如水的浅红，清透温润。'undefined,
+  {id:'feihong',name:'妃红',family:'红',hex:'#D69B9B',desc:'淡粉红色，唐制妃嫔常服之色。'undefined,
+  {id:'haitanghong',name:'海棠红',family:'红',hex:'#D45D5D',desc:'海棠花开的淡紫红色，"海棠不惜胭脂色"。'undefined,
+  {id:'tanse',name:'檀色',family:'红',hex:'#B87070',desc:'浅紫红色，如檀木之色，沉稳温柔。'undefined,
+  {id:'xiangse',name:'缃色',p:'xiāng sè',family:'黄',hex:'#EDD9A0',desc:'浅黄色，如初生桑叶之色。'undefined,
+  {id:'xiangye',name:'缃叶',p:'xiāng yè',family:'黄',hex:'#E8D48B',desc:'同"缃色"，特指桑叶初生的淡黄。'undefined,
+  {id:'zhizi',name:'栀子',family:'黄',hex:'#F0D060',desc:'用栀子果实染出的黄色，偏暖。'undefined,
+  {id:'nenehuang',name:'嫩鹅黄',family:'黄',hex:'#FDEAA8',desc:'小鹅绒毛的淡黄色，鲜嫩可爱。'undefined,
+  {id:'ehuang',name:'鹅黄',family:'黄',hex:'#FFE55C',desc:'小鹅的黄色，较嫩鹅黄略明亮。'undefined,
+  {id:'songhua',name:'松花',family:'黄',hex:'#F5E6A3',desc:'松花粉的淡黄色，轻淡柔和。'undefined,
+  {id:'huangheliuli',name:'黄河琉璃',family:'黄',hex:'#E8B830',desc:'日光照耀下黄河水如同黄琉璃般璀璨。'undefined,
+  {id:'boshi',name:'薄柿',family:'黄',hex:'#E8A860',desc:'未熟柿子的淡橘黄色，质朴温暖。'undefined,
+  {id:'qiuxiangse',name:'秋香色',family:'黄',hex:'#C4A84C',desc:'秋日草木的黄绿色调，稳重大气，《红楼梦》中多见。'undefined,
+  {id:'hupo',name:'琥珀',family:'黄',hex:'#C8763A',desc:'琥珀树脂的暖棕黄色，温润通透。'undefined,
+  {id:'mihese',name:'蜜合色',family:'黄',hex:'#E8C878',desc:'淡黄微红的柔和暖色，如蜜调和。'undefined,
+  {id:'tianpiao',name:'天缥',p:'tiān piǎo',family:'青',hex:'#C8E0E8',desc:'如雨过天青的浅青色，清透淡雅。'undefined,
+  {id:'zhuqing',name:'竹青',family:'青',hex:'#78A87C',desc:'竹子表面的青绿色，生机盎然。'undefined,
+  {id:'gunqing',name:'群青',family:'青',hex:'#2E4E8E',desc:'鲜艳的深蓝色，古代因原料珍贵而价值堪比黄金。'undefined,
+  {id:'tianqing',name:'天青',family:'青',hex:'#68A0C8',desc:'雨后天空的青色，纯净致远。'undefined,
+  {id:'canglang',name:'沧浪',family:'青',hex:'#5CA8A8',desc:'水色，青绿色，出自《孟子》"沧浪之水清兮"。'undefined,
+  {id:'tianshuibi',name:'天水碧',family:'青',hex:'#80B0B8',desc:'南唐后主李煜的姬妾所染，如秋水澄澈。'undefined,
+  {id:'piaose',name:'缥色',p:'piǎo sè',family:'青',hex:'#B8D0D8',desc:'淡青色，常与"缃"对举，指代书卷。'undefined,
+  {id:'zhuyue',name:'竹月',family:'青',hex:'#486878',desc:'竹林中月光的淡蓝色，清冷寂寥。'undefined,
+  {id:'qiaoxiachunbo',name:'桥下春波',family:'青',hex:'#6AA08A',desc:'春日桥下清波的蓝绿色，充满诗意。'undefined,
+  {id:'ruocao',name:'若草',family:'青',hex:'#A8C868',desc:'如初生嫩草般的黄绿色，充满生机。'undefined,
+  {id:'qingmeizhujiu',name:'青梅煮酒',family:'青',hex:'#8AA868',desc:'青梅与黄酒交融的青黄色，典故出自《三国演义》。'undefined,
+  {id:'dianlan',name:'靛蓝',p:'diàn lán',family:'青',hex:'#1E3A5F',desc:'蓝草制靛染出的深蓝色，中国传统染料代表之一。'undefined,
+  {id:'dailan',name:'黛蓝',p:'dài lán',family:'青',hex:'#2A4070',desc:'深蓝带青，远山如黛之色。'undefined,
+  {id:'douqing',name:'豆青',family:'青',hex:'#90B87A',desc:'青瓷的淡青绿色，温润如玉。'undefined,
+  {id:'liulv',name:'柳绿',family:'青',hex:'#68A84A',desc:'春日新柳的嫩绿色，鲜嫩明快。'undefined,
+  {id:'aiqing',name:'艾青',family:'青',hex:'#688058',desc:'艾草叶的苍绿色，古朴深沉。'undefined,
+  {id:'shilv',name:'石绿',family:'青',hex:'#58A878',desc:'矿物颜料制绿色，敦煌壁画常用色。'undefined,
+  {id:'yuanshanrudai',name:'远山如黛',family:'青',hex:'#4A5878',desc:'远山呈现的深青黑色，古代女子常用作画眉色。'undefined,
+  {id:'tubai',name:'荼白',p:'tú bái',family:'白',hex:'#F0EDE4',desc:'如荼（一种白花）的白色，素净雅致。'undefined,
+  {id:'yuebai',name:'月白',family:'白',hex:'#C8D8E8',desc:'带淡蓝调的白色，如月光般清冷。'undefined,
+  {id:'ningzhi',name:'凝脂',family:'白',hex:'#F8F0E0',desc:'如凝固的油脂，形容肌肤白皙细腻，出自《诗经》。'undefined,
+  {id:'gao',name:'缟',p:'gǎo',family:'白',hex:'#E8E0D0',desc:'未经染色的白绢之色，素朴本真。'undefined,
+  {id:'xuanse',name:'玄色',p:'xuán sè',family:'黑',hex:'#1A1820',desc:'黑中带赤，指夜空之色，神秘庄重。'undefined,
+  {id:'zise',name:'缁色',p:'zī sè',family:'黑',hex:'#2A2830',desc:'纯黑色，古时僧侣常服之色。'undefined,
+  {id:'yaqing',name:'鸦青',family:'黑',hex:'#384048',desc:'黑中带紫绿光泽，如乌鸦羽毛之色。'undefined,
+  {id:'xuantian',name:'玄天',p:'xuán tiān',family:'黑',hex:'#3A2840',desc:'黎明前黑中透红的天空色，太阳将出未出之际。'undefined,
+  {id:'baicaoshuang',name:'百草霜',family:'黑',hex:'#484848',desc:'锅底上百种草烧完后形成的如霜灰烬之色。'undefined,
+  {id:'yanse',name:'烟色',family:'黑',hex:'#686868',desc:'如烟雾般的灰棕色，朦胧淡雅。'undefined,
+  {id:'zaose',name:'皂色',p:'zào sè',family:'黑',hex:'#303030',desc:'纯深黑灰色，古时官服与平民常服多见。'undefined,
+  {id:'chenxiang',name:'沉香',family:'褐',hex:'#6A5040',desc:'沉香木的黄黑色，沉稳高级。'undefined,
+  {id:'zheshi',name:'赭石',p:'zhě shí',family:'褐',hex:'#8B6048',desc:'红褐色矿物颜料，岩画与壁画中常用。'undefined,
+  {id:'luoli',name:'落栗',family:'褐',hex:'#885848',desc:'栗壳的褐棕色，质朴温暖。'undefined,
+  {id:'mushanzi',name:'暮山紫',family:'紫',hex:'#6A4A8A',desc:'夕阳薄雾笼罩远山时呈现的紫色，出自王勃《滕王阁序》。'undefined,
+  {id:'ouhe',name:'藕荷',p:'ǒu hé',family:'紫',hex:'#C8A8C8',desc:'浅紫带粉红，淡雅温柔，常见于服饰。'undefined,
+  {id:'zhizhu',name:'踯躅',p:'zhí zhú',family:'紫',hex:'#D48AA8',desc:'杜鹃花（踯躅花）的粉紫色，明艳动人。'undefined,
+  {id:'qinglian',name:'青莲',family:'紫',hex:'#7858A8',desc:'偏蓝的淡紫色，如青莲花瓣，清雅高洁。'undefined,
+  {id:'dingxiang',name:'丁香',family:'紫',hex:'#B8A0C0',desc:'丁香花的淡紫粉色，清雅含蓄。'undefined,
+  {id:'dongfangjibai',name:'东方既白',family:'青',hex:'#A8C8E0',desc:'黎明时天空蓝中透白的颜色，出自苏轼《赤壁赋》。'undefined,
+  {id:'meiran',name:'梅染',family:'红',hex:'#C8A098',desc:'用梅花树枝染就的颜色，清雅高洁。'undefined
 ];
 
 // ====== Traditional Patterns ======
@@ -637,6 +662,14 @@ function selectColor(id) {
   currentName.innerHTML = renderColorName(c);
   currentHex.textContent = c.hex;
   currentDesc.textContent = c.desc;
+  // Flip back - poem & object
+  const bp = document.getElementById('backPoem');
+  const bo = document.getElementById('backObject');
+  if (c.poem) { bp.textContent = c.poem; bp.style.display = ''; }
+  else { bp.style.display = 'none'; }
+  if (c.object) { bo.textContent = c.object; bo.style.display = ''; }
+  else { bo.style.display = 'none'; }
+  document.getElementById('infoPanel').classList.remove('flipped');
   const same = COLORS.filter(x => x.family === c.family && x.id !== id);
   relatedChips.innerHTML = same.map(x =>
     `<span class="related-chip" onclick="selectColor('${x.id}')">
@@ -661,6 +694,10 @@ function selectColor(id) {
 searchInput.addEventListener('input', applyFilters);
 
 document.querySelector('.filter-btn[data-family="all"]').addEventListener('click', () => setFilter('all'));
+
+document.getElementById('infoPanel').addEventListener('click', () => {
+  document.getElementById('infoPanel').classList.toggle('flipped');
+});
 
 buildFilters();
 buildCarousel();
