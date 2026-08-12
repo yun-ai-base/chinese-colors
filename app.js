@@ -227,7 +227,8 @@ function buildCarousel() {
     const card = document.createElement('div');
     card.className = 'carousel-card';
     if (p.svg) {
-      card.innerHTML = p.svg + '<div class="lady-name">' + p.name + '</div>';
+      card.innerHTML = p.svg + '<div class="lady-name">' + p.name + '</div>'
+        + (p.desc ? '<div class="pattern-desc">' + p.desc + '</div>' : '');
     } else {
       const mask = `linear-gradient(to bottom, transparent ${p.maskT}%, black ${p.maskS}%, black ${p.maskE}%, transparent ${p.maskB}%)`;
       const base = p.file.slice(0, -4);
