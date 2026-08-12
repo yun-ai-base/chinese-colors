@@ -1,163 +1,311 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>中国传统色彩</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>中国传统色彩 · 67 色古画着色体验</title>
+<meta name="description" content="67 种中国传统色彩：点击色卡为古画着色，翻阅诗文与实物考据，探索配色灵感。">
+<meta property="og:title" content="中国传统色彩">
+<meta property="og:description" content="点击色卡，为唐宋古画着色。67 种传统色，一部可触摸的色彩史。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="zanhua.jpg">
+<meta name="theme-color" content="#f5f0e8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5/index.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+/* ========== 基础 token ========== */
 :root{
-  --bg:#f5f0e8;--text:#3d2b1f;--card-bg:#fff;
-  --shadow:rgba(61,43,31,0.1);--border:#d4c8b8;
-  --accent:#c0392b;--robe-color:#FF4C00;
-  --radius:240px;--muted:#8a7a6a;
-  --card-hover:rgba(61,43,31,0.05);
+  --c-paper:#f5f0e8; --c-paper-2:#efe7d8; --c-surface:#fffdf8; --c-surface-2:#f8f4ee;
+  --c-ink:#3d2b1f; --c-ink-2:#57493c; --c-ink-3:#6f5f4e;
+  --c-line:#d4c8b8; --c-line-soft:rgba(61,43,31,.12); --c-accent:#c0392b; --c-accent-soft:rgba(192,57,43,.08);
+  --shadow-1:0 2px 8px rgba(61,43,31,.08); --shadow-2:0 10px 28px rgba(61,43,31,.14);
+  --radius-lg:16px; --radius-md:10px; --radius-sm:8px; --radius-pill:999px;
+  --carousel-radius:240px;
+  --serif:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif;
+  --sans:"Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  /* 语义 token */
+  --bg:var(--c-paper); --surface:var(--c-surface); --surface-2:var(--c-surface-2);
+  --text:var(--c-ink); --text-2:var(--c-ink-2); --muted:var(--c-ink-3);
+  --border:var(--c-line); --accent:var(--c-accent);
+  --paper-noise:0.05;
 }
-body{background:var(--bg);color:var(--text);font-family:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif;min-height:100vh}
-#app{display:flex;flex-direction:column;height:100vh}
-header{text-align:center;padding:12px 20px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+html[data-theme="dark"]{
+  --c-paper:#211c17; --c-paper-2:#2a241d; --c-surface:#322b22; --c-surface-2:#3a3228;
+  --c-ink:#ece3d2; --c-ink-2:#c9bca7; --c-ink-3:#a2907a;
+  --c-line:#4a4034; --c-line-soft:rgba(236,227,210,.14); --c-accent:#e0674f; --c-accent-soft:rgba(224,103,79,.14);
+  --shadow-1:0 2px 8px rgba(0,0,0,.3); --shadow-2:0 10px 28px rgba(0,0,0,.4);
+  --paper-noise:0.07;
+  --carousel-radius:220px;
+  color-scheme:dark;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;
+  -webkit-font-smoothing:antialiased;position:relative;
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:var(--paper-noise);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='1'/></feComponentTransfer></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.5}
+#app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh}
+header{text-align:center;padding:12px 20px 8px;border-bottom:1px solid var(--border);flex-shrink:0;position:relative}
 header h1{font-size:22px;font-weight:700;letter-spacing:6px}
 header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
+.icon-btn{
+  position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;
+  transition:all .2s;color:var(--text-2);
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn svg{width:17px;height:17px}
+.today-badge{
+  position:absolute;top:12px;left:14px;display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;letter-spacing:1px;color:var(--muted);padding:5px 12px;border-radius:var(--radius-pill);
+  border:1px dashed var(--border);background:var(--surface);transition:all .2s;font-family:var(--sans);
+}
+.today-badge:hover{border-color:var(--accent);color:var(--accent)}
+.today-badge .sw{width:12px;height:12px;border-radius:50%;display:inline-block;box-shadow:0 0 0 1px var(--border)}
 .main-content{display:flex;flex:1;overflow:hidden}
-
-/* Left panel */
+/* ========== 左侧：轮播 + 信息卡 ========== */
 .left-panel{width:42%;display:flex;flex-direction:column;align-items:center;padding:15px 15px 8px;border-right:1px solid var(--border);overflow:hidden}
-
-/* Carousel with real paintings */
 .carousel-wrap{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;perspective:800px;position:relative}
-.carousel-wrap::before{content:'';position:absolute;width:90%;padding-bottom:90%;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(200,180,160,.2) 0%,rgba(200,180,160,.06) 45%,transparent 70%);pointer-events:none;border-radius:50%}
-.carousel{width:280px;height:290px;position:relative;transform-style:preserve-3d;transition:transform 0.1s;cursor:grab;will-change:transform}
+.carousel-wrap::before{content:'';position:absolute;width:90%;padding-bottom:90%;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(200,180,160,.22) 0%,rgba(200,180,160,.06) 45%,transparent 70%);pointer-events:none;border-radius:50%}
+.carousel{width:280px;height:290px;position:relative;transform-style:preserve-3d;cursor:grab;will-change:transform}
 .carousel:active{cursor:grabbing}
-.carousel-card{position:absolute;width:260px;height:270px;left:10px;top:10px;backface-visibility:hidden;border-radius:10px;overflow:hidden;background:var(--card-bg);box-shadow:0 6px 25px var(--shadow);display:flex;align-items:center;justify-content:center;flex-direction:column;will-change:transform,opacity}
-.carousel-card .img-wrap{width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#e8ddd0}
+.carousel-card{position:absolute;width:260px;height:270px;left:10px;top:10px;backface-visibility:hidden;border-radius:10px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow-1);display:flex;align-items:center;justify-content:center;flex-direction:column;will-change:transform,opacity}
+.carousel-card .img-wrap{width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--c-paper-2)}
 .carousel-card .img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.carousel-card .img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,var(--card-bg));pointer-events:none}
+.carousel-card .img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:56px;background:linear-gradient(transparent,var(--surface));pointer-events:none}
 .carousel-card .color-overlay{position:absolute;inset:0;mix-blend-mode:color;background:var(--robe-color);opacity:0.5;pointer-events:none;transition:background 0.5s;-webkit-mask-image:var(--overlay-mask);mask-image:var(--overlay-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%}
-.carousel-card .painting-name{position:absolute;top:0;left:0;right:0;padding:7px 10px;background:linear-gradient(rgba(0,0,0,0.55),transparent);color:#f0e8d8;font-size:12px;letter-spacing:2px;text-align:center;pointer-events:none}
+.carousel-card .painting-name{position:absolute;top:0;left:0;right:0;padding:7px 10px;background:linear-gradient(rgba(0,0,0,.55),transparent);color:#f0e8d8;font-size:12px;letter-spacing:2px;text-align:center;pointer-events:none}
 .carousel-card .lady-name{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);letter-spacing:2px;pointer-events:none}
 .carousel-card svg{width:90%;height:90%;display:block}
 .carousel-card .robe{transition:fill 0.5s ease}
-
-/* Info panel */
+/* 画作主色点 */
+.paint-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:8px;z-index:3}
+.paint-dot{
+  width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 1px 4px rgba(0,0,0,.4);transition:transform .15s;padding:0;position:relative;
+}
+.paint-dot:hover{transform:scale(1.25)}
+.paint-dot.active{box-shadow:0 0 0 2px var(--accent),0 1px 4px rgba(0,0,0,.4)}
+.paint-dot .dot-tip{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10px;font-family:var(--sans);color:#fff;background:rgba(30,25,18,.85);
+  padding:2px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s;letter-spacing:1px;
+}
+.paint-dot:hover .dot-tip{opacity:1}
+/* 信息卡 */
 .info-panel{width:100%;text-align:center}
-/* Flip card */
-.flip-wrap{perspective:800px;width:100%;max-width:420px;flex-shrink:0;padding:12px 0 4px;position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}
+.flip-wrap{
+  perspective:800px;width:100%;max-width:420px;flex-shrink:0;padding:12px 0 4px;position:relative;
+  -webkit-user-select:none;user-select:none;
+}
 .flip-wrap::before{content:'';display:block;width:70%;height:5px;border-radius:3px;margin:0 auto 10px;background:var(--robe-color);transition:background .5s}
-.flip-wrap::after{content:'';position:absolute;top:9px;left:15%;width:9px;height:9px;border-radius:50%;background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;box-shadow:0 0 10px var(--dot-color-0,var(--robe-color))}
-.flip-inner{position:relative;width:100%;min-height:190px;transition:transform .6s ease;transform-style:preserve-3d}
+.flip-wrap::after{
+  content:'';position:absolute;top:9px;left:15%;width:9px;height:9px;border-radius:50%;
+  background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;
+  box-shadow:0 0 10px var(--dot-color-0,var(--robe-color));
+}
+.flip-inner{position:relative;width:100%;min-height:200px;transition:transform .6s ease;transform-style:preserve-3d}
 .flip-wrap.flipped .flip-inner{transform:rotateY(180deg)}
 .flip-front,.flip-back{position:relative;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
 .flip-back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8px 12px;overflow-y:auto}
-.flip-back .back-poem{font-size:15px;color:#6a5a4a;line-height:1.8;font-style:italic;letter-spacing:1px;max-width:380px;margin-bottom:10px;position:relative;padding:0 10px}
-.flip-back .back-poem::before{content:'\AB';color:var(--accent);font-size:18px;opacity:.5;margin-right:4px}
-.flip-back .back-poem::after{content:'\BB';color:var(--accent);font-size:18px;opacity:.5;margin-left:4px}
-.flip-back .back-object{font-size:13px;color:var(--muted);line-height:1.6;letter-spacing:1px;max-width:380px;padding:8px 14px;background:rgba(192,57,43,.04);border-radius:8px;border:1px solid rgba(192,57,43,.1)}
-.flip-back .back-object-label{font-size:11px;color:var(--muted);letter-spacing:2px;margin:4px 0 2px}
-.flip-hint{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:4px;opacity:.5;transition:opacity .3s}
+.back-poem{font-size:15px;color:var(--text-2);line-height:1.8;font-style:italic;letter-spacing:1px;max-width:380px;margin-bottom:10px;position:relative;padding:0 10px}
+.back-poem::before{content:'\AB';color:var(--accent);font-size:18px;opacity:.5;margin-right:4px}
+.back-poem::after{content:'\BB';color:var(--accent);font-size:18px;opacity:.5;margin-left:4px}
+.back-poem.none{font-style:normal;color:var(--muted);font-size:13px}
+.back-object{font-size:13px;color:var(--text-2);line-height:1.6;letter-spacing:1px;max-width:380px;padding:8px 14px;background:var(--c-accent-soft);border-radius:var(--radius-sm);border:1px solid rgba(192,57,43,.12)}
+.back-object-label{font-size:11px;color:var(--muted);letter-spacing:2px;margin:4px 0 2px}
+.flip-hint{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:6px;opacity:.5;transition:opacity .3s}
 .flip-wrap:hover .flip-hint{opacity:.8}
 @keyframes bounceDot{
-0%{left:15%;background:var(--dot-color-0,var(--robe-color));box-shadow:0 0 10px var(--dot-color-0,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+0%{left:15%;background:var(--dot-color-0,var(--robe-color));box-shadow:0 0 10px var(--dot-color-0,var(--robe-color));transform:scaleX(.7) scaleY(1.35)}
 12%{transform:scaleX(1.05) scaleY(.95)}
 25%{left:32.5%;background:var(--dot-color-1,var(--robe-color));box-shadow:0 0 12px var(--dot-color-1,var(--robe-color));transform:scaleX(1.1) scaleY(.9)}
 37%{transform:scaleX(1.05) scaleY(.95)}
-50%{left:calc(85% - 9px);background:var(--dot-color-2,var(--robe-color));box-shadow:0 0 10px var(--dot-color-2,var(--robe-color)),6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+50%{left:calc(85% - 9px);background:var(--dot-color-2,var(--robe-color));box-shadow:0 0 10px var(--dot-color-2,var(--robe-color));transform:scaleX(.7) scaleY(1.35)}
 62%{transform:scaleX(1.05) scaleY(.95)}
 75%{left:32.5%;background:var(--dot-color-3,var(--robe-color));box-shadow:0 0 12px var(--dot-color-3,var(--robe-color));transform:scaleX(1.1) scaleY(.9)}
 87%{transform:scaleX(1.05) scaleY(.95)}
-100%{left:15%;background:var(--dot-color-4,var(--robe-color));box-shadow:0 0 10px var(--dot-color-4,var(--robe-color)),-6px 0 4px -2px rgba(0,0,0,.08);transform:scaleX(.7) scaleY(1.35)}
+100%{left:15%;background:var(--dot-color-4,var(--robe-color));box-shadow:0 0 10px var(--dot-color-4,var(--robe-color));transform:scaleX(.7) scaleY(1.35)}
 }
 .color-name-row{display:flex;justify-content:center;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap}
 .color-name-row .name{font-size:26px;font-weight:700;letter-spacing:4px}
 .color-name-row .name ruby{text-decoration:none}
 .color-name-row .name rt{font-size:12px;font-weight:400;color:var(--muted);letter-spacing:0}
-.color-name-row .hex{font-size:13px;color:var(--muted);font-family:monospace}
-.color-desc{font-size:13px;color:#6a5a4a;line-height:1.6;max-width:360px;margin:2px auto 6px}
+.color-name-row .hex{font-size:13px;color:var(--muted);font-family:var(--mono)}
+.color-desc{font-size:13px;color:var(--text-2);line-height:1.6;max-width:360px;margin:2px auto 6px}
+.info-actions{display:flex;justify-content:center;gap:8px;margin:6px 0}
+.mini-btn{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--radius-pill);
+  border:1px solid var(--border);background:var(--surface);font-size:12px;font-family:var(--sans);
+  transition:all .2s;color:var(--text-2);
+}
+.mini-btn:hover{border-color:var(--accent);color:var(--accent)}
+.mini-btn svg{width:13px;height:13px}
+.mini-btn.faved{color:var(--accent);border-color:var(--accent);background:var(--c-accent-soft)}
 .related-label{font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:2px}
 .related-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
-.related-chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;cursor:pointer;border:1px solid var(--border);transition:all 0.2s;background:var(--card-bg)}
-.related-chip:hover{border-color:var(--text)}
-.related-chip .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
-
-/* Palette */
+.related-chip{
+  display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--radius-pill);font-size:12px;cursor:pointer;
+  border:1px solid var(--border);transition:all 0.2s;background:var(--surface);font-family:var(--sans);
+}
+.related-chip:hover{border-color:var(--accent)}
+.related-chip .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.related-chip .f-tag{font-size:9px;color:var(--muted);margin-left:4px;letter-spacing:0}
 .palette-section{margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
 .palette-label{font-size:11px;color:var(--muted);margin-bottom:6px;letter-spacing:2px}
 .palette-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .palette-item-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
-.palette-item{width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 6px var(--shadow),0 0 0 2px var(--card-bg);flex-shrink:0}
-.palette-item:hover{transform:translateY(-4px) scale(1.12);box-shadow:0 6px 14px var(--shadow),0 0 0 2px var(--card-bg);z-index:2}
+.palette-item{
+  width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .25s,box-shadow .25s;
+  box-shadow:0 2px 6px var(--shadow-1),0 0 0 2px var(--surface);flex-shrink:0;padding:0;border:1px solid var(--c-line-soft);
+}
+.palette-item:hover{transform:translateY(-4px) scale(1.12);box-shadow:var(--shadow-2),0 0 0 2px var(--surface);z-index:2}
 .palette-item-name{font-size:10px;color:var(--muted);white-space:nowrap;max-width:42px;overflow:hidden;text-overflow:ellipsis;text-align:center}
-
-/* Right panel */
-.right-panel{flex:1;display:flex;flex-direction:column;overflow:hidden}
+/* ========== 右侧：工具栏 + 网格 ========== */
+.right-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .toolbar{padding:10px 14px 6px;flex-shrink:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:1px solid var(--border)}
 .filter-group{display:flex;flex-wrap:wrap;gap:4px}
-.filter-btn{padding:4px 12px;border-radius:14px;border:1px solid var(--border);background:var(--card-bg);font-size:13px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:inherit}
-.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
-.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.search-input{flex:1;min-width:100px;padding:5px 12px;border:1px solid var(--border);border-radius:14px;font-size:13px;background:var(--card-bg);color:var(--text);outline:none;font-family:inherit}
-.search-input:focus{border-color:var(--accent)}
-.mode-btn{padding:4px 12px;border-radius:14px;border:1px solid var(--border);background:var(--card-bg);font-size:12px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:inherit;letter-spacing:1px;display:flex;align-items:center;gap:3px;flex-shrink:0}
-.mode-btn:hover{border-color:var(--accent);color:var(--accent)}
-.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.grid-wrap{flex:1;overflow-y:auto;padding:10px}
+.btn{
+  padding:4px 12px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);
+  font-size:13px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:var(--sans);letter-spacing:1px;
+  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn svg{width:13px;height:13px}
+.mode-btn{font-size:12px}
+.search-input{
+  flex:1;min-width:100px;padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius-pill);
+  font-size:13px;background:var(--surface);color:var(--text);outline:none;font-family:var(--sans);
+}
+.search-input:focus-visible{border-color:var(--accent)}
+.search-input::placeholder{color:var(--muted)}
+/* 统计面板 */
+.viz-panel{
+  display:flex;gap:24px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;
+  background:var(--surface-2);align-items:center;
+}
+.viz-panel[hidden]{display:none}
+.viz-title{font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;text-align:center}
+.donut{width:110px;height:110px;border-radius:50%;margin:0 auto;position:relative}
+.donut::after{content:'';position:absolute;inset:22px;border-radius:50%;background:var(--surface-2)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--muted);letter-spacing:1px;z-index:1}
+.donut-center b{font-size:16px;color:var(--text);font-weight:700}
+.donut-legend{display:grid;grid-template-columns:repeat(2,minmax(64px,1fr));gap:4px 12px;margin-top:8px;font-family:var(--sans)}
+.donut-legend span{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2)}
+.donut-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+#hueCanvas{cursor:crosshair;background:radial-gradient(circle at center,#fff 0%,#f0ece2 55%,transparent 56%);border-radius:50%;border:1px solid var(--c-line-soft)}
+html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#2a241d 0%,#3a3228 55%,transparent 56%)}
+/* 网格 */
+.grid-wrap{flex:1;overflow-y:auto;padding:10px;position:relative}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:14px}
-.color-card{border-radius:14px;background:var(--card-bg);cursor:pointer;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 2px 8px var(--shadow);border:2px solid transparent;padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center}
-.color-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px var(--shadow)}
+.color-card{
+  border-radius:var(--radius-lg);background:var(--surface);cursor:pointer;text-align:center;
+  transition:transform 0.25s,box-shadow 0.25s;box-shadow:var(--shadow-1);border:2px solid transparent;
+  padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center;
+}
+.color-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-2)}
+.color-card:active{transform:scale(.97)}
 .color-card.active{border-color:var(--accent)}
-.color-swatch{width:82px;height:82px;border-radius:50%;transition:background 0.3s;position:relative;box-shadow:0 6px 16px rgba(0,0,0,0.15),0 2px 4px rgba(0,0,0,0.1),inset 0 -3px 6px rgba(0,0,0,0.08);flex-shrink:0}
-.color-swatch::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.12) 20%,transparent 45%,rgba(0,0,0,0.12) 70%,rgba(0,0,0,0.35) 100%);pointer-events:none}
-.color-swatch::after{content:'';position:absolute;top:7%;left:20%;width:28%;height:18%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,0.6) 0%,transparent 70%);pointer-events:none}
-.color-card .info{padding:6px 4px 0;text-align:center}
+.color-card.active::after{content:'✓';position:absolute;top:8px;right:10px;font-size:12px;color:var(--accent)}
+.color-card{position:relative}
+.color-swatch{
+  width:82px;height:82px;border-radius:50%;transition:transform .3s,box-shadow .3s;position:relative;
+  box-shadow:0 6px 16px rgba(0,0,0,.15),0 2px 4px rgba(0,0,0,.1),inset 0 -3px 6px rgba(0,0,0,.08);flex-shrink:0;
+}
+.color-swatch::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.5) 0%,rgba(255,255,255,.12) 20%,transparent 45%,rgba(0,0,0,.12) 70%,rgba(0,0,0,.35) 100%);pointer-events:none}
+.color-swatch::after{content:'';position:absolute;top:7%;left:20%;width:28%;height:18%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.6) 0%,transparent 70%);pointer-events:none}
+.color-card:hover .color-swatch{transform:scale(1.06)}
+.color-card .info{padding:6px 4px 0}
 .color-card .info .cname{font-size:14px;font-weight:700;letter-spacing:1px}
 .color-card .info .cname ruby{text-decoration:none}
 .color-card .info .cname rt{font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0}
 .color-card .info .cfamily{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:2px;opacity:.7}
-.hint-bar{text-align:center;padding:5px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0}
-.hint-twin-btn{cursor:pointer;transition:color .25s;display:inline}
+.empty-state{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;letter-spacing:2px}
+.hint-bar{text-align:center;padding:5px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0;font-family:var(--sans)}
+.hint-twin-btn{color:var(--muted);cursor:pointer;transition:color .25s;display:inline;letter-spacing:0}
 .hint-twin-btn:hover{color:var(--accent)}
+.hint-sub{font-size:.8em;opacity:.6}
 .hint-bar-sep{color:var(--border);margin:0 4px}
-
-/* Twin universe modal */
-.twin-overlay{display:none;position:fixed;inset:0;z-index:1100;background:rgba(61,43,31,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+/* ========== 孪生宇宙弹窗 ========== */
+.twin-overlay{display:none;position:fixed;inset:0;z-index:1100;background:rgba(30,25,18,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
 .twin-overlay.open{display:flex}
-.twin-panel{position:relative;width:100%;max-width:800px;max-height:85vh;background:#fdfaf5;border-radius:16px;box-shadow:0 20px 60px rgba(61,43,31,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalSlideUp .35s ease}
+.twin-panel{position:relative;width:100%;max-width:800px;max-height:85vh;background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-2);overflow:hidden;display:flex;flex-direction:column;animation:modalSlideUp .35s ease}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.twin-close{position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#8a7a6a;background:rgba(245,240,232,.8);border-radius:50%;transition:all .25s ease;z-index:10;border:none;cursor:pointer;font-family:inherit}
-.twin-close:hover{color:var(--accent);background:rgba(192,57,43,.1);transform:rotate(90deg)}
+.twin-close{
+  position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);background:var(--surface-2);border-radius:50%;transition:all .25s ease;z-index:10;
+}
+.twin-close:hover{color:var(--accent);background:var(--c-accent-soft);transform:rotate(90deg)}
+.twin-close svg{width:16px;height:16px}
 .twin-header{text-align:center;padding:36px 32px 20px;flex-shrink:0}
-.twin-header h2{font-family:inherit;font-size:1.3rem;font-weight:700;color:#3d2b1f;letter-spacing:4px}
+.twin-header h2{font-size:1.3rem;font-weight:700;color:var(--text);letter-spacing:4px}
 .twin-subtitle{font-size:.78rem;color:var(--muted);letter-spacing:2px;margin-top:6px}
 .twin-body{padding:0 32px 28px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .twin-section{margin-bottom:28px}
 .twin-section:last-child{margin-bottom:0}
-.twin-section-title{font-family:inherit;font-size:.8rem;font-weight:600;color:var(--text);letter-spacing:2px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid rgba(192,57,43,.15);display:flex;align-items:center;gap:6px}
+.twin-section-title{font-size:.8rem;font-weight:600;color:var(--text);letter-spacing:2px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--c-line-soft);display:flex;align-items:center;gap:6px}
 .twin-grid{display:flex;flex-wrap:wrap;gap:10px}
-.twin-card{display:inline-flex;align-items:center;gap:12px;padding:12px 16px;background:#f8f4ee;border:1px solid #e4dcd0;border-radius:10px;text-decoration:none;transition:all .25s ease;flex:1;min-width:200px;max-width:360px}
-.twin-card:hover{border-color:var(--accent);background:#fdf8f0;transform:translateY(-2px);box-shadow:0 4px 16px rgba(192,57,43,.08)}
-.twin-card-icon{font-size:1.2rem;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(245,240,232,.6);border-radius:8px}
+.twin-card{display:inline-flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;transition:all .25s ease;flex:1;min-width:200px;max-width:360px;color:var(--text)}
+.twin-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-2)}
+.twin-card-icon{font-size:1.2rem;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--surface);border-radius:var(--radius-sm)}
 .twin-card-info{flex:1;min-width:0;display:flex;flex-direction:column}
-.twin-card-name{font-family:inherit;font-size:.85rem;font-weight:600;color:var(--text);line-height:1.4}
+.twin-card-name{font-size:.85rem;font-weight:600;color:var(--text);line-height:1.4}
 .twin-card-desc{font-size:.72rem;color:var(--muted);line-height:1.4;margin-top:2px}
-.twin-card-arrow{font-size:.9rem;color:#c4b89e;flex-shrink:0;transition:all .25s}
+.twin-card-arrow{font-size:.9rem;color:var(--muted);flex-shrink:0;transition:all .25s}
 .twin-card:hover .twin-card-arrow{color:var(--accent);transform:translateX(3px)}
-
-/* Mobile */
+.twin-msg{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;letter-spacing:2px}
+/* ========== Toast ========== */
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);z-index:1300;
+  background:var(--c-ink);color:var(--bg);padding:9px 18px;border-radius:var(--radius-pill);
+  font-size:13px;font-family:var(--sans);letter-spacing:1px;opacity:0;pointer-events:none;
+  transition:opacity .3s,transform .3s;box-shadow:var(--shadow-2);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ========== 移动端降级：横滑轮播 ========== */
+.carousel-swipe{
+  display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  width:100%;max-width:560px;padding:8px 12px 14px;height:auto;transform:none;perspective:none;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;
+}
+.carousel-swipe::-webkit-scrollbar{display:none}
+.carousel-swipe .carousel-card{
+  position:relative;left:auto;top:auto;flex:0 0 82%;scroll-snap-align:center;
+  width:82%;max-width:330px;height:auto;aspect-ratio:4/4.2;transform:none;opacity:1;
+}
+.carousel-swipe .carousel-card .img-wrap{height:100%}
+/* ========== 响应式 ========== */
 @media(max-width:768px){
   #app{height:auto;min-height:100vh}
   .main-content{flex-direction:column}
-  .left-panel{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:10px;min-height:380px}
-  .carousel{width:200px;height:210px}
-  .carousel-card{width:185px;height:195px;left:7.5px;top:7.5px}
-  :root{--radius:180px}
+  .left-panel{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:10px;min-height:0}
+  .carousel-wrap{perspective:none;flex:none;min-height:0}
+  :root{--carousel-radius:180px}
+  .carousel-wrap::before{display:none}
   .info-panel{padding:8px 0}
   .color-name-row .name{font-size:22px}
-  .right-panel{height:auto;max-height:55vh}
+  .right-panel{height:auto;max-height:52vh}
   .grid{grid-template-columns:repeat(2,1fr);gap:10px}
   .color-card{padding:12px 4px 8px}
   .color-swatch{width:64px;height:64px}
   .palette-item{width:30px;height:30px}
   .palette-item-name{font-size:9px;max-width:34px}
   header h1{font-size:18px}
+  .today-badge{position:static;margin:6px auto 0;display:inline-flex}
+  header{padding-bottom:10px}
   .twin-overlay{padding:0;align-items:flex-end}
   .twin-panel{max-width:100%;max-height:92vh;border-radius:16px 16px 0 0}
   .twin-header{padding:28px 20px 16px}
@@ -166,15 +314,18 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   .twin-card{min-width:160px;padding:10px 14px}
 }
 @media(max-width:480px){
-  .left-panel{min-height:330px}
-  .carousel{width:170px;height:185px}
-  .carousel-card{width:156px;height:171px;left:7px;top:7px}
-  :root{--radius:160px}
+  .carousel-swipe .carousel-card{flex-basis:88%;width:88%;aspect-ratio:4/4.6}
   .grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .color-card{padding:10px 4px 6px}
   .color-swatch{width:52px;height:52px}
   .palette-item{width:26px;height:26px}
   .palette-item-name{font-size:8px;max-width:30px}
+  .viz-panel{gap:14px;padding:10px}
+}
+/* ========== 减少动态偏好 ========== */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .flip-inner{transition:none}
 }
 </style>
 </head>
@@ -184,14 +335,20 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   <header>
     <h1>中国传统色彩</h1>
     <div class="sub">共 <span id="totalCount">67</span> 色 · 点击颜色卡为画作着色</div>
+    <button class="today-badge" id="todayBtn" title="今日一色，点击直达">
+      <span class="sw" id="todaySwatch"></span><span id="todayName">今日一色</span>
+    </button>
+    <button class="icon-btn" id="themeBtn" aria-label="切换明暗主题" title="切换明暗主题">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg>
+    </button>
   </header>
 
   <div class="main-content">
     <div class="left-panel">
-      <div class="carousel-wrap">
-        <div class="carousel" id="carousel"></div>
+      <div class="carousel-wrap" id="carouselWrap">
+        <div class="carousel" id="carousel" aria-label="画作轮播"></div>
       </div>
-      <div class="flip-wrap" id="infoPanel">
+      <div class="flip-wrap" id="infoPanel" role="button" tabindex="0" aria-expanded="false" aria-label="颜色信息卡，回车或空格翻转查看诗句与实物">
         <div class="flip-inner">
           <div class="flip-front">
             <div class="info-panel">
@@ -199,11 +356,25 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
                 <span class="name" id="currentName">朱红</span>
                 <span class="hex" id="currentHex">#FF4C00</span>
               </div>
-              <div class="color-desc" id="currentDesc">正红色，介于红与橙之间，传统吉祥色。</div>
+              <div class="color-desc" id="currentDesc"></div>
+              <div class="info-actions">
+                <button class="mini-btn" id="favBtn" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.7-4.35-9.3-8.1C.8 9.9 2.4 5.5 6.3 5.5c2.2 0 3.5 1.2 4.2 2.4.7-1.2 2-2.4 4.2-2.4 3.9 0 5.5 4.4 3.6 7.4C18.7 16.65 12 21 12 21z"/></svg>
+                  <span id="favLabel">收藏</span>
+                </button>
+                <button class="mini-btn" id="exportBtn" aria-haspopup="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  导出
+                </button>
+                <button class="mini-btn" id="shareBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+                  分享
+                </button>
+              </div>
               <div class="related-label">— 同系颜色 —</div>
               <div class="related-chips" id="relatedChips"></div>
               <div class="palette-section">
-                <div class="palette-label">— 配色灵感 —</div>
+                <div class="palette-label">— 配色灵感 · 规则搭配 —</div>
                 <div class="palette-row" id="paletteRow"></div>
               </div>
             </div>
@@ -212,6 +383,8 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
             <div class="back-poem" id="backPoem"></div>
             <div class="back-object-label">— 对应实物 —</div>
             <div class="back-object" id="backObject"></div>
+            <div class="related-label" style="margin-top:10px">— 相近色 · 跨色系 CIELAB —</div>
+            <div class="related-chips" id="nearChips"></div>
             <div class="flip-hint">点击翻回</div>
           </div>
         </div>
@@ -221,567 +394,63 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
     <div class="right-panel">
       <div class="toolbar">
         <div class="filter-group" id="filterGroup">
-          <button class="filter-btn active" data-family="all">全部</button>
+          <button class="btn filter-btn active" data-family="all" aria-pressed="true">全部</button>
         </div>
-        <button class="mode-btn" id="modeBtn">🏺 画作</button>
-        <input class="search-input" id="searchInput" placeholder="搜索颜色名..." autocomplete="off">
+        <button class="btn mode-btn" id="modeBtn" aria-pressed="false">
+          <svg id="modeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5-9 9"/></svg>
+          <span id="modeLabel">画作</span>
+        </button>
+        <button class="btn mode-btn" id="statsBtn" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          统计
+        </button>
+        <input class="search-input" id="searchInput" placeholder="搜索颜色名..." autocomplete="off" aria-label="搜索颜色名">
+      </div>
+      <div class="viz-panel" id="vizPanel" hidden>
+        <div>
+          <div class="viz-title">色系分布</div>
+          <div class="donut" id="donut"><div class="donut-center"><b id="donutTotal">67</b>色</div></div>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+        <div style="position:relative">
+          <div class="viz-title">色相-饱和度分布 · 悬停查看色名</div>
+          <canvas id="hueCanvas" width="260" height="260" role="img" aria-label="色相饱和度分布散点图"></canvas>
+        </div>
       </div>
       <div class="grid-wrap">
         <div class="grid" id="colorGrid"></div>
+        <div class="empty-state" id="emptyState" hidden>没有找到匹配的颜色</div>
       </div>
     </div>
   </div>
 
   <div class="hint-bar">
-    拖拽 360° 环绕 · 点击颜色卡着色 · 切换画作/纹样模式
+    拖拽 360° 环绕 · 点击颜色卡着色 · 键盘 ← → 切换画作 · Enter 翻转信息卡
     <span class="hint-bar-sep">·</span>
-    <span class="hint-twin-btn" onclick="toggleTwin()">🌌 孪生宇宙 <span style="font-size:.8em;opacity:.6">点击见大世界</span></span>
+    <button class="hint-twin-btn" id="twinOpenBtn">孪生宇宙 <span class="hint-sub">点击见大世界</span></button>
   </div>
 </div>
 
 <!-- 孪生宇宙弹窗 -->
-<div class="twin-overlay" id="twinView" onclick="if(event.target===this)toggleTwin()">
+<div class="twin-overlay" id="twinView" role="dialog" aria-modal="true" aria-labelledby="twinTitle">
   <div class="twin-panel">
-    <button class="twin-close" onclick="toggleTwin()">✕</button>
+    <button class="twin-close" id="twinClose" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
     <div class="twin-header">
-      <h2>🌌 中国传统色孪生宇宙</h2>
+      <h2 id="twinTitle">中国传统色孪生宇宙</h2>
       <p class="twin-subtitle">我的其他项目 · 点击跳转</p>
     </div>
-    <div class="twin-body" id="twinContainer"></div>
+    <div class="twin-body" id="twinContainer">
+      <div class="twin-msg" id="twinLoading">正在连接孪生宇宙…</div>
+      <div class="twin-msg" id="twinError" hidden>暂时无法连接孪生宇宙，请稍后再试</div>
+    </div>
   </div>
 </div>
 
-<script>
-const COLORS = [
-  {id:'jiang',name:'绛',p:'jiàng',family:'红',hex:'#8B1A1A',desc:'大红色，比朱红更深，古时常用作礼服色。',poem:'',object:'古代礼服常用色，绛紫袍服为高官所着'},
-  {id:'zhuhong',name:'朱红',family:'红',hex:'#FF4C00',desc:'正红色，介于红与橙之间，传统吉祥色。',poem:'',object:'朱砂矿物颜料，古代建筑宫墙之色'},
-  {id:'yanzhi',name:'胭脂',p:'yān zhī',family:'红',hex:'#C72C48',desc:'女子化妆用的深粉红色，取自胭脂花。',poem:'海棠不惜胭脂色，独立蒙蒙细雨中',object:'胭脂花/红蓝花制，女子化妆与国画颜料'},
-  {id:'zhongguohong',name:'中国红',family:'红',hex:'#D32F2F',desc:'中国人最喜爱的喜庆正红色，象征热情与繁荣。',poem:'',object:'中国国旗色，春节对联灯笼之色'},
-  {id:'taohong',name:'桃红',family:'红',hex:'#F47983',desc:'桃花般的粉红色，娇艳明媚。',poem:'去年今日此门中，人面桃花相映红',object:'桃花花瓣之色'},
-  {id:'shiliuhong',name:'石榴红',family:'红',hex:'#D9383A',desc:'石榴花的鲜红色，浓郁热烈。',poem:'',object:'石榴花之色，唐代女裙流行色'},
-  {id:'tuoyan',name:'酡颜',p:'tuó yán',family:'红',hex:'#F08080',desc:'饮酒后脸上泛起的红晕，微醺之色。',poem:'彩袖殷勤捧玉钟，当年拚却醉颜红',object:'饮酒后脸上泛起的红晕'},
-  {id:'haitianxia',name:'海天霞',family:'红',hex:'#E8C4B8',desc:'明代宫廷流行色，似白而微红，如海上朝霞。',poem:'海天霞色上轻罗',object:'明代宫廷织造的罗裙色'},
-  {id:'shuse',name:'曙色',family:'红',hex:'#E8845C',desc:'清晨破晓时红黄相间的天色，温暖明亮。',poem:'',object:'清晨破晓时东方的天色'},
-  {id:'sufang',name:'苏芳',p:'sū fāng',family:'红',hex:'#8B3A62',desc:'源自苏木染出的深红色，深沉古典。',poem:'',object:'苏木染出的深红，唐代织物常见'},
-  {id:'xunhuang',name:'纁黄',p:'xūn huáng',family:'红',hex:'#D4693A',desc:'太阳落山后余光折射的橙红色，与"玄"相对。',poem:'',object:'太阳落下地平线后的余光之色'},
-  {id:'qianse',name:'茜色',p:'qiàn sè',family:'红',hex:'#B74141',desc:'茜草根染出的深红色，古代最重要的红色染料之一。',poem:'缟衣茹茜，聊可与娱',object:'茜草根染出的红色，最古老的植物染料之一'},
-  {id:'yinhong',name:'银红',family:'红',hex:'#D98989',desc:'银朱调和而成的粉红色，明代服饰常见色。',poem:'',object:'银朱调和而成的粉红'},
-  {id:'shuihong',name:'水红',family:'红',hex:'#E8B0B0',desc:'淡如水的浅红，清透温润。',poem:'',object:'淡如水的浅红色，薄纱之色'},
-  {id:'feihong',name:'妃红',family:'红',hex:'#D69B9B',desc:'淡粉红色，唐制妃嫔常服之色。',poem:'',object:'唐代妃嫔常服之色'},
-  {id:'haitanghong',name:'海棠红',family:'红',hex:'#D45D5D',desc:'海棠花开的淡紫红色，"海棠不惜胭脂色"。',poem:'海棠不惜胭脂色，独立蒙蒙细雨中',object:'海棠花之色'},
-  {id:'tanse',name:'檀色',family:'红',hex:'#B87070',desc:'浅紫红色，如檀木之色，沉稳温柔。',poem:'',object:'檀木之色，沉稳温柔'},
-  {id:'xiangse',name:'缃色',p:'xiāng sè',family:'黄',hex:'#EDD9A0',desc:'浅黄色，如初生桑叶之色。',poem:'词人才子，则名溢于缥囊；飞文染翰，则卷盈乎缃帙',object:'桑叶初生之淡黄色，古代书卷之色'},
-  {id:'xiangye',name:'缃叶',p:'xiāng yè',family:'黄',hex:'#E8D48B',desc:'同"缃色"，特指桑叶初生的淡黄。',poem:'',object:'桑叶初生的淡黄色'},
-  {id:'zhizi',name:'栀子',family:'黄',hex:'#F0D060',desc:'用栀子果实染出的黄色，偏暖。',poem:'',object:'栀子果实染出的黄色'},
-  {id:'nenehuang',name:'嫩鹅黄',family:'黄',hex:'#FDEAA8',desc:'小鹅绒毛的淡黄色，鲜嫩可爱。',poem:'',object:'小鹅绒毛的淡黄色'},
-  {id:'ehuang',name:'鹅黄',family:'黄',hex:'#FFE55C',desc:'小鹅的黄色，较嫩鹅黄略明亮。',poem:'鹅黄雪白络新丝',object:'小鹅之黄色'},
-  {id:'songhua',name:'松花',family:'黄',hex:'#F5E6A3',desc:'松花粉的淡黄色，轻淡柔和。',poem:'',object:'松花粉的淡黄色'},
-  {id:'huangheliuli',name:'黄河琉璃',family:'黄',hex:'#E8B830',desc:'日光照耀下黄河水如同黄琉璃般璀璨。',poem:'放眼三十里，日耀黄琉璃',object:'日光下黄河水如黄色琉璃瓦'},
-  {id:'boshi',name:'薄柿',family:'黄',hex:'#E8A860',desc:'未熟柿子的淡橘黄色，质朴温暖。',poem:'',object:'未熟柿子的淡橘黄色'},
-  {id:'qiuxiangse',name:'秋香色',family:'黄',hex:'#C4A84C',desc:'秋日草木的黄绿色调，稳重大气，《红楼梦》中多见。',poem:'',object:'秋日草木黄绿色调，《红楼梦》中服饰色'},
-  {id:'hupo',name:'琥珀',family:'黄',hex:'#C8763A',desc:'琥珀树脂的暖棕黄色，温润通透。',poem:'兰陵美酒郁金香，玉碗盛来琥珀光',object:'琥珀树脂的暖棕黄色'},
-  {id:'mihese',name:'蜜合色',family:'黄',hex:'#E8C878',desc:'淡黄微红的柔和暖色，如蜜调和。',poem:'',object:'蜂蜜调和之色，淡黄微红'},
-  {id:'tianpiao',name:'天缥',p:'tiān piǎo',family:'青',hex:'#C8E0E8',desc:'如雨过天青的浅青色，清透淡雅。',poem:'',object:'雨过天青的浅青色'},
-  {id:'zhuqing',name:'竹青',family:'青',hex:'#78A87C',desc:'竹子表面的青绿色，生机盎然。',poem:'',object:'竹子表面的青绿色'},
-  {id:'gunqing',name:'群青',family:'青',hex:'#2E4E8E',desc:'鲜艳的深蓝色，古代因原料珍贵而价值堪比黄金。',poem:'',object:'青金石研磨而成，古代价比黄金'},
-  {id:'tianqing',name:'天青',family:'青',hex:'#68A0C8',desc:'雨后天空的青色，纯净致远。',poem:'雨过天青云破处，这般颜色做将来',object:'汝窑天青釉瓷器，宋代美学巅峰'},
-  {id:'canglang',name:'沧浪',family:'青',hex:'#5CA8A8',desc:'水色，青绿色，出自《孟子》"沧浪之水清兮"。',poem:'沧浪之水清兮，可以濯我缨',object:'水之青绿色'},
-  {id:'tianshuibi',name:'天水碧',family:'青',hex:'#80B0B8',desc:'南唐后主李煜的姬妾所染，如秋水澄澈。',poem:'天水碧，染就一江秋色',object:'南唐后主姬妾所染之色'},
-  {id:'piaose',name:'缥色',p:'piǎo sè',family:'青',hex:'#B8D0D8',desc:'淡青色，常与"缃"对举，指代书卷。',poem:'',object:'淡青色，常与缃对举指代书卷'},
-  {id:'zhuyue',name:'竹月',family:'青',hex:'#486878',desc:'竹林中月光的淡蓝色，清冷寂寥。',poem:'竹月泛凉影',object:'竹林中月光之清冷色调'},
-  {id:'qiaoxiachunbo',name:'桥下春波',family:'青',hex:'#6AA08A',desc:'春日桥下清波的蓝绿色，充满诗意。',poem:'伤心桥下春波绿，曾是惊鸿照影来',object:'春日桥下清波之色'},
-  {id:'ruocao',name:'若草',family:'青',hex:'#A8C868',desc:'如初生嫩草般的黄绿色，充满生机。',poem:'',object:'初生嫩草的黄绿色'},
-  {id:'qingmeizhujiu',name:'青梅煮酒',family:'青',hex:'#8AA868',desc:'青梅与黄酒交融的青黄色，典故出自《三国演义》。',poem:'青梅煮酒论英雄',object:'青梅与黄酒交融之色'},
-  {id:'dianlan',name:'靛蓝',p:'diàn lán',family:'青',hex:'#1E3A5F',desc:'蓝草制靛染出的深蓝色，中国传统染料代表之一。',poem:'',object:'蓝草制靛染出，传统蓝染工艺'},
-  {id:'dailan',name:'黛蓝',p:'dài lán',family:'青',hex:'#2A4070',desc:'深蓝带青，远山如黛之色。',poem:'',object:'远山之深青蓝色'},
-  {id:'douqing',name:'豆青',family:'青',hex:'#90B87A',desc:'青瓷的淡青绿色，温润如玉。',poem:'',object:'青瓷之淡青绿色，如玉温润'},
-  {id:'liulv',name:'柳绿',family:'青',hex:'#68A84A',desc:'春日新柳的嫩绿色，鲜嫩明快。',poem:'',object:'春日新柳的嫩绿色'},
-  {id:'aiqing',name:'艾青',family:'青',hex:'#688058',desc:'艾草叶的苍绿色，古朴深沉。',poem:'',object:'艾草叶的苍绿色'},
-  {id:'shilv',name:'石绿',family:'青',hex:'#58A878',desc:'矿物颜料制绿色，敦煌壁画常用色。',poem:'',object:'孔雀石研磨的矿物颜料，千里江山图主色'},
-  {id:'yuanshanrudai',name:'远山如黛',family:'青',hex:'#4A5878',desc:'远山呈现的深青黑色，古代女子常用作画眉色。',poem:'',object:'远山的青黑色，古时女子画眉之色'},
-  {id:'tubai',name:'荼白',p:'tú bái',family:'白',hex:'#F0EDE4',desc:'如荼（一种白花）的白色，素净雅致。',poem:'',object:'荼（白花）之白色'},
-  {id:'yuebai',name:'月白',family:'白',hex:'#C8D8E8',desc:'带淡蓝调的白色，如月光般清冷。',poem:'凉生秋早，正梧桐院落，风清月白',object:'月光之清冷白色'},
-  {id:'ningzhi',name:'凝脂',family:'白',hex:'#F8F0E0',desc:'如凝固的油脂，形容肌肤白皙细腻，出自《诗经》。',poem:'手如柔荑，肤如凝脂',object:'凝固的油脂之色，形容白皙肌肤'},
-  {id:'gao',name:'缟',p:'gǎo',family:'白',hex:'#E8E0D0',desc:'未经染色的白绢之色，素朴本真。',poem:'',object:'未经染色的白绢之色'},
-  {id:'xuanse',name:'玄色',p:'xuán sè',family:'黑',hex:'#1A1820',desc:'黑中带赤，指夜空之色，神秘庄重。',poem:'天地玄黄，宇宙洪荒',object:'黑中带赤的夜空之色'},
-  {id:'zise',name:'缁色',p:'zī sè',family:'黑',hex:'#2A2830',desc:'纯黑色，古时僧侣常服之色。',poem:'',object:'僧侣常服之纯黑色'},
-  {id:'yaqing',name:'鸦青',family:'黑',hex:'#384048',desc:'黑中带紫绿光泽，如乌鸦羽毛之色。',poem:'鸦青幕挂一团冰',object:'乌鸦羽毛黑中带紫绿光泽'},
-  {id:'xuantian',name:'玄天',p:'xuán tiān',family:'黑',hex:'#3A2840',desc:'黎明前黑中透红的天空色，太阳将出未出之际。',poem:'',object:'黎明前黑中透红的天空之色'},
-  {id:'baicaoshuang',name:'百草霜',family:'黑',hex:'#484848',desc:'锅底上百种草烧完后形成的如霜灰烬之色。',poem:'',object:'锅底百草灰烬如霜之色'},
-  {id:'yanse',name:'烟色',family:'黑',hex:'#686868',desc:'如烟雾般的灰棕色，朦胧淡雅。',poem:'',object:'如烟雾般的灰棕色'},
-  {id:'zaose',name:'皂色',p:'zào sè',family:'黑',hex:'#303030',desc:'纯深黑灰色，古时官服与平民常服多见。',poem:'',object:'古时官服与平民常服之色'},
-  {id:'chenxiang',name:'沉香',family:'褐',hex:'#6A5040',desc:'沉香木的黄黑色，沉稳高级。',poem:'',object:'沉香木的黄黑色，沉稳高级'},
-  {id:'zheshi',name:'赭石',p:'zhě shí',family:'褐',hex:'#8B6048',desc:'红褐色矿物颜料，岩画与壁画中常用。',poem:'',object:'赤铁矿研制的颜料，敦煌岩画所用'},
-  {id:'luoli',name:'落栗',family:'褐',hex:'#885848',desc:'栗壳的褐棕色，质朴温暖。',poem:'',object:'栗壳的褐棕色'},
-  {id:'mushanzi',name:'暮山紫',family:'紫',hex:'#6A4A8A',desc:'夕阳薄雾笼罩远山时呈现的紫色，出自王勃《滕王阁序》。',poem:'烟光凝而暮山紫',object:'夕阳薄雾笼罩远山之紫色'},
-  {id:'ouhe',name:'藕荷',p:'ǒu hé',family:'紫',hex:'#C8A8C8',desc:'浅紫带粉红，淡雅温柔，常见于服饰。',poem:'',object:'莲藕煮熟后的淡紫粉色'},
-  {id:'zhizhu',name:'踯躅',p:'zhí zhú',family:'紫',hex:'#D48AA8',desc:'杜鹃花（踯躅花）的粉紫色，明艳动人。',poem:'晚叶尚开红踯躅，秋芳初结白芙蓉',object:'杜鹃花（踯躅花）之色'},
-  {id:'qinglian',name:'青莲',family:'紫',hex:'#7858A8',desc:'偏蓝的淡紫色，如青莲花瓣，清雅高洁。',poem:'',object:'青莲花瓣的淡紫色'},
-  {id:'dingxiang',name:'丁香',family:'紫',hex:'#B8A0C0',desc:'丁香花的淡紫粉色，清雅含蓄。',poem:'',object:'丁香花的淡紫粉色'},
-  {id:'dongfangjibai',name:'东方既白',family:'青',hex:'#A8C8E0',desc:'黎明时天空蓝中透白的颜色，出自苏轼《赤壁赋》。',poem:'不知东方之既白',object:'黎明时蓝中透白的天空之色'},
-  {id:'meiran',name:'梅染',family:'红',hex:'#C8A098',desc:'用梅花树枝染就的颜色，清雅高洁。',poem:'',object:'梅花树枝染就的颜色'}
-];
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-// ====== Traditional Patterns ======
-const PATTERNS = [
-  { name:'云纹 · 敦煌', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><path class="co" d="M-80,-20C-90,-40-70,-60-40,-55-20,-70 10,-65 25,-50 50,-55 70,-40 60,-20 70,0 55,20 35,20 40,35 25,50 5,45-15,55-35,45-40,25-55,30-75,15-70,-5Z"/><path class="co" d="M-70,-5C-80,-5-90,5-85,15-80,25-65,20-60,10Z"/><path class="co" d="M50,-35C60,-45 75,-40 80,-25 85,-10 70,0 55,-10Z"/><circle cx="-25" cy="-35" r="4" class="dk"/><circle cx="20" cy="-40" r="3" class="dk"/><circle cx="-15" cy="25" r="3.5" class="dk"/><circle cx="35" cy="10" r="3" class="dk"/><path class="li" d="M-80,-20C-90,-40-70,-60-40,-55-20,-70 10,-65 25,-50 50,-55 70,-40 60,-20 70,0 55,20 35,20 40,35 25,50 5,45-15,55-35,45-40,25-55,30-75,15-70,-5Z"/><path class="li" d="M-70,-5C-80,-5-90,5-85,15-80,25-65,20-60,10Z"/><path class="li" d="M50,-35C60,-45 75,-40 80,-25 85,-10 70,0 55,-10Z"/><path class="li" d="M-40,-55C-35,-45-30,-42-25,-45"/><path class="li" d="M25,-50C30,-42 35,-40 40,-45"/></g></svg>' },
-  { name:'回纹 · 商周', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}</style><g transform="translate(130,130)"><rect x="-95" y="-95" width="190" height="190" class="li"/><rect x="-80" y="-80" width="160" height="160" class="li" stroke-width="1.5"/><path class="co li" d="M-70,-65L-70,-45L-40,-45L-40,-65M-30,-65L-30,-45L0,-45L0,-65M10,-65L10,-45L40,-45L40,-65M50,-65L50,-45L70,-45"/><path class="co li" d="M-70,45L-70,65L-40,65L-40,45M-30,45L-30,65L0,65L0,45M10,45L10,65L40,65L40,45M50,45L50,65L70,65"/><path class="co li" d="M-65,-70L-65,-40L-45,-40L-45,-70M-65,-30L-65,0L-45,0L-45,-30M-65,10L-65,40L-45,40L-45,10M-65,50L-65,70"/><path class="co li" d="M65,-70L65,-40L45,-40L45,-70M65,-30L65,0L45,0L45,-30M65,10L65,40L45,40L45,10M65,50L65,70"/><rect x="-25" y="-25" width="50" height="50" class="li"/><rect x="-12" y="-12" width="24" height="24" class="co" rx="2"/></g></svg>' },
-  { name:'缠枝莲 · 织锦', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}</style><g transform="translate(130,130)"><path class="co" d="M-15,-30C-5,-45 5,-45 15,-30 20,-20 20,5 15,20 5,35-5,35-15,20-20,5-20,-20-15,-30Z"/><path class="co" d="M0,-28C-2,-18-5,-10-3,0 0,-5 3,-10 0,-28Z"/><path class="co" d="M-8,-22C-5,-15-8,-8-6,0-3,-5-6,-10-8,-22Z"/><path class="co" d="M8,-22C5,-15 8,-8 6,0 3,-5 6,-10 8,-22Z"/><path class="li" d="M-15,-20C-45,-30-50,-60-35,-70"/><path class="li" d="M15,-20C45,-30 50,-60 35,-70"/><path class="li" d="M-15,20C-45,30-50,60-35,70"/><path class="li" d="M15,20C45,30 50,60 35,70"/><path class="co" d="M-40,-50C-45,-55-35,-65-30,-55-25,-45-35,-45-40,-50Z"/><path class="co" d="M40,-50C45,-55 35,-65 30,-55 25,-45 35,-45 40,-50Z"/><path class="co" d="M-40,50C-45,55-35,65-30,55-25,45-35,45-40,50Z"/><path class="co" d="M40,50C45,55 35,65 30,55 25,45 35,45 40,50Z"/><path class="li" d="M-35,-70C-30,-80-20,-75-25,-65"/><path class="li" d="M35,-70C30,-80 20,-75 25,-65"/><path class="li" d="M-35,70C-30,80-20,75-25,65"/><path class="li" d="M35,70C30,80 20,75 25,65"/><path class="li" d="M-15,-30C-5,-45 5,-45 15,-30 20,-20 20,5 15,20 5,35-5,35-15,20-20,5-20,-20-15,-30Z"/></g></svg>' },
-  { name:'冰梅纹 · 明清', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1;fill:none}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><path class="li" d="M-90,0L-30,-50L40,-30L90,-80" opacity="0.4"/><path class="li" d="M-80,60L-20,10L30,50L80,20" opacity="0.4"/><path class="li" d="M-60,-80L0,-40L60,-70" opacity="0.4"/><path class="li" d="M-70,-30L-10,-10L50,-50" opacity="0.4"/><path class="li" d="M-50,40L10,20L70,60" opacity="0.4"/><g transform="translate(0,0)"><path class="co" d="M0,-5C-2,-14-8,-18-12,-14-14,-10-10,-4-5,-2Z"/><path class="co" d="M0,-5C7,-12 14,-10 12,-5 10,0 5,2 2,-1Z"/><path class="co" d="M0,-5C8,6 8,14 3,15-2,16-4,10-2,4Z"/><path class="co" d="M0,-5C-8,6-14,10-12,14-10,18-4,15-2,8Z"/><path class="co" d="M0,-5C2,-14 8,-18 12,-14 14,-10 10,-4 5,-2Z"/><circle cx="0" cy="-5" r="3" class="dk"/></g><g transform="translate(-55,-60)scale(0.6)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C7,5 7,12 2,13-2,14-3,8-2,3Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2.5" class="dk"/></g><g transform="translate(60,50)scale(0.7)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2.5" class="dk"/></g><g transform="translate(-65,60)scale(0.5)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2" class="dk"/></g><g transform="translate(55,-65)scale(0.45)"><path class="co" d="M0,-4C-2,-12-7,-15-10,-12-12,-8-8,-3-4,-1Z"/><path class="co" d="M0,-4C6,-10 12,-8 10,-4 8,0 4,1 2,-1Z"/><path class="co" d="M0,-4C-7,5-12,8-10,12-8,15-3,12-2,6Z"/><circle cx="0" cy="-4" r="2" class="dk"/></g></g></svg>' },
-  { name:'方胜纹 · 传统', svg: '<svg viewBox="0 0 260 260"><style>.co{fill:var(--robe-color)}.li{stroke:#1a1820;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}.dk{fill:#1a1820}</style><g transform="translate(130,130)"><rect x="-95" y="-95" width="190" height="190" class="li" rx="4"/><path class="co li" d="M0,-75L65,-25L65,25L0,75L-65,25L-65,-25Z"/><path class="co li" d="M0,-55L50,-15L50,15L0,55L-50,15L-50,-15Z"/><circle cx="0" cy="0" r="15" class="li"/><circle cx="0" cy="0" r="8" class="co"/><rect x="-88" y="-88" width="12" height="12" class="co" rx="1"/><rect x="76" y="-88" width="12" height="12" class="co" rx="1"/><rect x="-88" y="76" width="12" height="12" class="co" rx="1"/><rect x="76" y="76" width="12" height="12" class="co" rx="1"/><path class="li" d="M0,-65L55,-20L55,20L0,65L-55,20L-55,-20Z" stroke-width="0.8" opacity="0.5"/></g></svg>' }
-];
-const LADY_SVG = `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg"><style>.cut{fill:var(--cut-color,#1a1820)}.dress{fill:var(--robe-color)}.hole{fill:var(--bg,#f5f0e8)}.line{stroke:var(--cut-color,#1a1820);stroke-width:1.5;fill:none}</style>
-<!-- Circular frame / 团扇外框 -->
-<circle cx="150" cy="250" r="230" fill="none" stroke="var(--cut-color,#1a1820)" stroke-width="2" opacity="0.3"/>
-<circle cx="150" cy="250" r="220" fill="none" stroke="var(--cut-color,#1a1820)" stroke-width="1" opacity="0.15"/>
-
-<!-- === Full figure silhouette === -->
-<g transform="translate(150,260)">
-  <!-- Hair bun / 发髻 -->
-  <path class="cut" d="M-28,-150 C-28,-175 -20,-190 0,-195 C20,-190 28,-175 28,-150 C28,-165 18,-175 0,-178 C-18,-175 -28,-165 -28,-150 Z"/>
-  <path class="cut" d="M0,-195 C-5,-202 -2,-208 3,-210 C8,-208 10,-202 5,-198 Z"/>
-
-  <!-- Head silhouette / 头部剪影 -->
-  <ellipse cx="0" cy="-120" rx="30" ry="36" class="cut"/>
-
-  <!-- Neck / 颈 -->
-  <rect x="-8" y="-86" width="16" height="18" class="cut" rx="3"/>
-
-  <!-- === Dress / 衣裙 (colored area) === -->
-  <path class="dress" d="M-48,-70 C-52,-30 -55,20 -58,80 C-58,120 -50,165 -40,190 L40,190 C50,165 58,120 58,80 C55,20 52,-30 48,-70 Z"/>
-  <!-- Upper robe / 上衣 -->
-  <path class="dress" d="M-44,-70 C-38,-90 -22,-98 -14,-102 L14,-102 C22,-98 38,-90 44,-70 Z"/>
-  <!-- Sleeves / 双袖 -->
-  <path class="dress" d="M-44,-70 C-60,-60 -80,-55 -95,-50 C-98,-47 -96,-44 -90,-46 C-78,-52 -60,-58 -42,-62 Z"/>
-  <path class="dress" d="M44,-70 C60,-60 80,-55 95,-50 C98,-47 96,-44 90,-46 C78,-52 60,-58 42,-62 Z"/>
-
-  <!-- === Paper-cut decorative cutouts on dress / 衣裙镂空花纹 === -->
-  <!-- Skirt pattern - upper band -->
-  <path class="hole" d="M-30,-55 C-20,-50 20,-50 30,-55 C20,-48 -20,-48 -30,-55 Z"/>
-  <path class="hole" d="M-25,-30 C-15,-26 15,-26 25,-30 C15,-24 -15,-24 -25,-30 Z"/>
-  <!-- Diamond cutouts -->
-  <path class="hole" d="M-35,0 L-30,8 L-25,0 L-30,-8 Z"/>
-  <path class="hole" d="M35,0 L30,8 L25,0 L30,-8 Z"/>
-  <path class="hole" d="M-38,40 L-33,48 L-28,40 L-33,32 Z"/>
-  <path class="hole" d="M38,40 L33,48 L28,40 L33,32 Z"/>
-  <!-- Bottom wave pattern -->
-  <path class="hole" d="M-20,130 Q-10,125 0,130 Q10,125 20,130 Q10,135 0,130 Q-10,135 -20,130 Z"/>
-  <path class="hole" d="M-20,150 Q-10,145 0,150 Q10,145 20,150 Q10,155 0,150 Q-10,155 -20,150 Z"/>
-  <!-- Circle cutouts on sleeves -->
-  <circle cx="-75" cy="-55" r="6" class="hole"/>
-  <circle cx="75" cy="-55" r="6" class="hole"/>
-  <circle cx="-80" cy="-48" r="3" class="hole"/>
-  <circle cx="80" cy="-48" r="3" class="hole"/>
-
-  <!-- === Pibo / 披帛 - flowing scarf (colored) === -->
-  <path class="dress" d="M-40,-82 C-65,-88 -85,-78 -100,-68 C-105,-65 -108,-62 -105,-58 C-100,-56 -95,-58 -88,-62 C-78,-70 -60,-80 -42,-78 Z"/>
-  <path class="dress" d="M40,-82 C65,-88 85,-78 100,-68 C105,-65 108,-62 105,-58 C100,-56 95,-58 88,-62 C78,-70 60,-80 42,-78 Z"/>
-  <!-- Trailing ends -->
-  <path class="dress" d="M-100,-68 C-115,-55 -125,-48 -130,-50 C-128,-54 -120,-58 -110,-62 Z"/>
-  <path class="dress" d="M100,-68 C115,-55 125,-48 130,-50 C128,-54 120,-58 110,-62 Z"/>
-
-  <!-- === Face cutouts / 脸部镂空 === -->
-  <!-- Willow leaf eyebrows -->
-  <path class="hole" d="M-12,-128 C-9,-131 -5,-132 -2,-130 M2,-130 C5,-132 9,-131 12,-128" stroke-width="1.5"/>
-  <!-- Phoenix eyes -->
-  <path class="hole" d="M-12,-124 C-9,-126 -4,-126 -1,-123"/>
-  <path class="hole" d="M1,-123 C4,-126 9,-126 12,-124"/>
-  <!-- Nose -->
-  <path class="hole" d="M0,-120 C-1,-117 -1,-114 0,-112 C-2,-113 -3,-114 -3,-115" stroke-width="1"/>
-  <!-- Mouth -->
-  <path class="hole" d="M-3,-108 C0,-106 3,-108" stroke-width="1"/>
-  <!-- Huadian (forehead decoration) -->
-  <circle cx="0" cy="-132" r="2" class="hole"/>
-
-  <!-- === Hair ornaments / 发饰 cutouts === -->
-  <circle cx="-15" cy="-170" r="4" class="hole"/>
-  <circle cx="15" cy="-168" r="3.5" class="hole"/>
-  <circle cx="-18" cy="-162" r="2.5" class="hole"/>
-  <circle cx="18" cy="-160" r="2" class="hole"/>
-  <!-- Hairpin -->
-  <path class="line" d="M-10,-182 L-18,-172" stroke-width="2"/>
-  <circle cx="-19" cy="-171" r="3" class="hole"/>
-
-  <!-- === Hand fan / 团扇 === -->
-  <circle cx="-80" cy="-20" r="35" class="hole" opacity="0.8"/>
-  <circle cx="-80" cy="-20" r="28" class="cut" opacity="0.3"/>
-  <circle cx="-80" cy="-20" r="25" fill="var(--bg,#f5f0e8)" opacity="0.6"/>
-  <!-- Fan handle -->
-  <path class="line" d="M-70,15 L-62,30"/>
-  <!-- Fan pattern -->
-  <path class="line" d="M-90,-20 C-85,-15 -80,-12 -75,-15"/>
-  <path class="line" d="M-70,-20 C-75,-15 -80,-12 -85,-15"/>
-
-  <!-- === Ground line / 地面线 === -->
-  <path class="line" d="M-70,190 L70,190" stroke-width="1" opacity="0.4"/>
-
-  <!-- === Decorative plum blossoms / 梅花点缀 === -->
-  <g opacity="0.4" transform="translate(-130,-160)">
-    <circle cx="0" cy="-5" r="5" class="hole"/>
-    <circle cx="5" cy="-1" r="5" class="hole"/>
-    <circle cx="3" cy="4" r="5" class="hole"/>
-    <circle cx="-3" cy="4" r="5" class="hole"/>
-    <circle cx="-5" cy="-1" r="5" class="hole"/>
-    <circle cx="0" cy="0" r="2" class="hole"/>
-  </g>
-  <g opacity="0.3" transform="translate(120,-130) scale(0.7)">
-    <circle cx="0" cy="-5" r="5" class="hole"/>
-    <circle cx="5" cy="-1" r="5" class="hole"/>
-    <circle cx="3" cy="4" r="5" class="hole"/>
-    <circle cx="-3" cy="4" r="5" class="hole"/>
-    <circle cx="-5" cy="-1" r="5" class="hole"/>
-    <circle cx="0" cy="0" r="2" class="hole"/>
-  </g>
-
-  <!-- === Decorative cloud / 祥云 === -->
-  <g opacity="0.2">
-    <path class="cut" d="M-140,50 C-130,40 -115,45 -110,35 C-105,25 -95,30 -90,40 C-85,32 -73,38 -78,50 Z"/>
-    <path class="cut" d="M140,50 C130,40 115,45 110,35 C105,25 95,30 90,40 C85,32 73,38 78,50 Z"/>
-  </g>
-</g></svg>`;
-
-function ladySvg() { return LADY_SVG; }
-
-// ====== Real Classical Paintings ======
-const PAINTINGS = [
-  { name:'簪花仕女图 · 周昉', file:'zanhua.jpg', age:'唐代',
-    maskT:28, maskS:40, maskE:93, maskB:100 },
-  { name:'虢国夫人游春图 · 张萱', file:'youchun.jpg', age:'唐代',
-    maskT:22, maskS:35, maskE:92, maskB:100 },
-  { name:'宫女图 · 刘松年', file:'gongnv.jpg', age:'宋代',
-    maskT:18, maskS:30, maskE:95, maskB:100 },
-  { name:'天女献花图 · 刘松年', file:'tiannv.jpg', age:'宋代',
-    maskT:25, maskS:38, maskE:92, maskB:100 }
-];
-
-// ====== State ======
-let currentId = 'zhuhong';
-let activeFamily = 'all';
-let displayMode = 'paintings';
-let filteredColors = [...COLORS];
-const carouselEl = document.getElementById('carousel');
-const carouselWrap = document.querySelector('.carousel-wrap');
-let mouseOffsetRotate = 0;
-const colorGrid = document.getElementById('colorGrid');
-const filterGroup = document.getElementById('filterGroup');
-const searchInput = document.getElementById('searchInput');
-const currentName = document.getElementById('currentName');
-const currentHex = document.getElementById('currentHex');
-const currentDesc = document.getElementById('currentDesc');
-const relatedChips = document.getElementById('relatedChips');
-const paletteRow = document.getElementById('paletteRow');
-const modeBtn = document.getElementById('modeBtn');
-
-// ====== Carousel 3D with Paintings ======
-let rotationY = 0, isDragging = false, prevX = 0, velocity = 0, rafId = null;
-
-function getCurrentData() {
-  return displayMode === 'paintings' ? PAINTINGS : PATTERNS;
-}
-
-function buildCarousel() {
-  const data = getCurrentData();
-  const step = 360 / data.length;
-  carouselEl.innerHTML = '';
-  data.forEach((p, i) => {
-    const angle = i * step;
-    const card = document.createElement('div');
-    card.className = 'carousel-card';
-    card.dataset.angle = angle;
-    if (p.svg) {
-      card.innerHTML = p.svg + `<div class="lady-name">${p.name}</div>`;
-    } else {
-      const mask = `linear-gradient(to bottom, transparent ${p.maskT}%, black ${p.maskS}%, black ${p.maskE}%, transparent ${p.maskB}%)`;
-      card.innerHTML = `
-        <div class="img-wrap">
-          <img src="${p.file}" alt="${p.name}" draggable="false" loading="lazy">
-          <div class="color-overlay" style="-webkit-mask-image:${mask};mask-image:${mask}"></div>
-          <div class="painting-name">${p.name}</div>
-        </div>`;
-    }
-    carouselEl.appendChild(card);
-  });
-  updateCarouselRotation();
-}
-
-function updateCardDepth() {
-  const r = getComputedStyle(document.documentElement).getPropertyValue('--radius').trim();
-  const radius = parseInt(r) || 380;
-  const cards = carouselEl.querySelectorAll('.carousel-card');
-  cards.forEach(card => {
-    const angle = parseFloat(card.dataset.angle);
-    if (isNaN(angle)) return;
-    const rad = (angle + rotationY + mouseOffsetRotate) * Math.PI / 180;
-    const depth = Math.cos(rad) * 0.5 + 0.5;
-    const scale = 0.88 + 0.17 * depth;
-    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${scale})`;
-    card.style.opacity = 0.7 + 0.3 * depth;
-    card.style.zIndex = Math.round(depth * 100);
-  });
-}
-
-function updateCarouselRotation() {
-  carouselEl.style.transform = `rotateY(${rotationY + mouseOffsetRotate}deg)`;
-  updateCardDepth();
-}
-
-carouselEl.addEventListener('mousedown', e => {
-  isDragging = true; prevX = e.clientX;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-});
-document.addEventListener('mousemove', e => {
-  if (!isDragging) return;
-  const dx = e.clientX - prevX;
-  rotationY += dx * 0.5; prevX = e.clientX; velocity = dx * 0.3;
-  updateCarouselRotation();
-});
-document.addEventListener('mouseup', () => {
-  if (isDragging) { isDragging = false; startAutoRotate(); }
-});
-
-carouselEl.addEventListener('touchstart', e => {
-  const t = e.touches[0]; isDragging = true; prevX = t.clientX;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-}, {passive:true});
-carouselEl.addEventListener('touchmove', e => {
-  if (!isDragging) return;
-  const dx = e.touches[0].clientX - prevX;
-  rotationY += dx * 0.5; prevX = e.touches[0].clientX; velocity = dx * 0.3;
-  updateCarouselRotation();
-}, {passive:true});
-carouselEl.addEventListener('touchend', () => {
-  if (isDragging) { isDragging = false; startAutoRotate(); }
-}, {passive:true});
-
-// Mouse parallax — subtle rotation nudge
-carouselWrap.addEventListener('mousemove', e => {
-  if (isDragging) return;
-  const rect = carouselWrap.getBoundingClientRect();
-  const x = (e.clientX - rect.left) / rect.width - 0.5;
-  mouseOffsetRotate = x * 4;
-});
-carouselWrap.addEventListener('mouseleave', () => { mouseOffsetRotate = 0; });
-
-const BASE_SPEED = 0.12;
-
-function startAutoRotate() {
-  if (rafId) cancelAnimationFrame(rafId);
-  function step() {
-    velocity += (BASE_SPEED - velocity) * 0.015;
-    rotationY += velocity;
-    updateCarouselRotation();
-    rafId = requestAnimationFrame(step);
-  }
-  rafId = requestAnimationFrame(step);
-}
-
-// ====== Mode Toggle ======
-function toggleMode() {
-  displayMode = displayMode === 'paintings' ? 'patterns' : 'paintings';
-  modeBtn.textContent = displayMode === 'paintings' ? '🏺 画作' : '🎨 纹样';
-  buildCarousel();
-}
-modeBtn.addEventListener('click', toggleMode);
-
-// ====== Filter & Grid ======
-const FAMILIES = ['红','黄','青','紫','白','黑','褐'];
-
-function buildFilters() {
-  FAMILIES.forEach(f => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn'; btn.dataset.family = f;
-    btn.textContent = f;
-    btn.addEventListener('click', () => setFilter(f));
-    filterGroup.appendChild(btn);
-  });
-}
-
-function setFilter(family) {
-  activeFamily = family;
-  document.querySelectorAll('.filter-btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.family === family));
-  applyFilters();
-}
-
-function applyFilters() {
-  let list = [...COLORS];
-  if (activeFamily !== 'all') list = list.filter(c => c.family === activeFamily);
-  const kw = searchInput.value.trim();
-  if (kw) list = list.filter(c => c.name.includes(kw));
-  filteredColors = list;
-  renderGrid();
-  document.getElementById('totalCount').textContent = filteredColors.length;
-}
-
-function renderGrid() {
-  colorGrid.innerHTML = '';
-  filteredColors.forEach(c => {
-    const card = document.createElement('div');
-    card.className = `color-card${c.id === currentId ? ' active' : ''}`;
-    card.innerHTML = `
-      <div class="color-swatch" style="background:${c.hex}"></div>
-      <div class="info"><div class="cname">${renderColorName(c)}</div><div class="cfamily">${c.family}</div></div>`;
-    card.addEventListener('click', () => selectColor(c.id));
-    colorGrid.appendChild(card);
-  });
-}
-
-function renderColorName(c) {
-  return c.p ? '<ruby>' + c.name + '<rt>' + c.p + '</rt></ruby>' : c.name;
-}
-
-// ====== Palette ======
-const FAMILY_ORDER = ['红','黄','青','紫','白','黑','褐'];
-function getPalette(color) {
-  const idx = FAMILY_ORDER.indexOf(color.family);
-  const families = [];
-  const compIdx = (idx + 3) % FAMILY_ORDER.length;
-  families.push(FAMILY_ORDER[compIdx]);
-  families.push(FAMILY_ORDER[(idx + 1) % FAMILY_ORDER.length]);
-  const warm = ['红','黄','褐'], cool = ['青','紫'];
-  warm.includes(color.family) ? families.push(...cool) : families.push(...warm);
-  families.push('白','黑');
-  const pool = [], used = new Set([color.id]);
-  for (const f of families) {
-    const c = COLORS.filter(x => x.family === f && !used.has(x.id));
-    if (c.length) { const p = c[Math.floor(Math.random() * Math.min(c.length, 3))]; if (p) { pool.push(p); used.add(p.id); } }
-  }
-  if (pool.length < 5) {
-    const rest = COLORS.filter(x => !used.has(x.id)).sort(() => Math.random() - 0.5);
-    for (const r of rest) { if (pool.length >= 5) break; pool.push(r); }
-  }
-  return pool.slice(0, 5);
-}
-
-// ====== Select Color ======
-function selectColor(id) {
-  const c = COLORS.find(x => x.id === id);
-  if (!c) return;
-  currentId = id;
-  document.documentElement.style.setProperty('--robe-color', c.hex);
-  currentName.innerHTML = renderColorName(c);
-  currentHex.textContent = c.hex;
-  currentDesc.textContent = c.desc;
-  // Flip back - populate poem & object
-  var bp = document.getElementById('backPoem');
-  var bo = document.getElementById('backObject');
-  if (c.poem) { bp.textContent = c.poem; bp.style.display = ''; }
-  else { bp.style.display = 'none'; }
-  if (c.object) { bo.textContent = c.object; bo.style.display = ''; }
-  else { bo.style.display = 'none'; }
-  document.getElementById('infoPanel').classList.remove('flipped');
-  const same = COLORS.filter(x => x.family === c.family && x.id !== id);
-  relatedChips.innerHTML = same.map(x =>
-    `<span class="related-chip" onclick="selectColor('${x.id}')">
-      <span class="dot" style="background:${x.hex}"></span>${x.name}
-    </span>`).join('');
-  // Palette
-  const palette = getPalette(c);
-  palette.forEach((p, i) => document.documentElement.style.setProperty('--dot-color-' + i, p.hex));
-  paletteRow.innerHTML = palette.map(p =>
-    `<div class="palette-item-wrap">
-      <div class="palette-item" style="background:${p.hex}" onclick="selectColor('${p.id}')" title="${p.name}"></div>
-      <span class="palette-item-name">${p.name}</span>
-    </div>`
-  ).join('');
-  document.querySelectorAll('.color-card').forEach(card => {
-    const children = Array.from(colorGrid.children);
-    const idx = children.indexOf(card);
-    if (idx >= 0 && filteredColors[idx]) card.classList.toggle('active', filteredColors[idx].id === id);
-  });
-}
-
-searchInput.addEventListener('input', applyFilters);
-
-document.querySelector('.filter-btn[data-family="all"]').addEventListener('click', () => setFilter('all'));
-
-document.querySelector('.filter-btn[data-family="all"]').addEventListener('click', function() { setFilter('all'); });
-document.getElementById('infoPanel').addEventListener('click', function() {
-  this.classList.toggle('flipped');
-});
-
-buildFilters();
-buildCarousel();
-renderGrid();
-selectColor(currentId);
-startAutoRotate();
-
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => { buildCarousel(); }, 300);
-});
-
-// ═══ 孪生宇宙 ═══
-var SELF_PROJECT = 'chinese-colors';
-var PROJECTS_URL = 'https://yun-ai-base.github.io/psychscope/projects.json';
-var TWIN_CATS = {
-  ai:       { label: 'AI 对话',   emoji: '🤖' },
-  tool:     { label: '工具',      emoji: '🛠️' },
-  content:  { label: '内容精选',  emoji: '📖' }
-};
-var TWIN_ORDER = ['ai', 'tool', 'content'];
-var twinBuilt = false;
-
-function toggleTwin() {
-  var v = document.getElementById('twinView');
-  v.classList.toggle('open');
-  document.body.style.overflow = v.classList.contains('open') ? 'hidden' : '';
-  if (v.classList.contains('open') && !twinBuilt) {
-    twinBuilt = true;
-    buildTwin();
-  }
-}
-
-function buildTwin() {
-  var container = document.getElementById('twinContainer');
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', PROJECTS_URL, true);
-  xhr.onload = function () {
-    if (xhr.status !== 200) return;
-    try {
-      var all = JSON.parse(xhr.responseText);
-      var projects = all.filter(function (p) { return p.name !== SELF_PROJECT; });
-      var byCat = {};
-      projects.forEach(function (s) { (byCat[s.cat] = byCat[s.cat] || []).push(s); });
-      var html = '';
-      TWIN_ORDER.forEach(function (cat) {
-        var list = byCat[cat];
-        if (!list) return;
-        var info = TWIN_CATS[cat];
-        html += '<div class="twin-section">'
-             + '<div class="twin-section-title">' + info.emoji + ' ' + info.label + '</div>'
-             + '<div class="twin-grid">';
-        list.forEach(function (s) {
-          html += '<a class="twin-card" href="https://yun-ai-base.github.io/' + encodeURIComponent(s.name) + '/" target="_blank" rel="noopener">'
-               + '<span class="twin-card-icon">' + s.icon + '</span>'
-               + '<span class="twin-card-info">'
-               + '<span class="twin-card-name">' + escHtml(s.name) + '</span>'
-               + '<span class="twin-card-desc">' + escHtml(s.desc) + '</span>'
-               + '</span>'
-               + '<span class="twin-card-arrow">→</span>'
-               + '</a>';
-        });
-        html += '</div></div>';
-      });
-      container.innerHTML = html;
-    } catch (e) {}
-  };
-  xhr.send();
-}
-
-function escHtml(s) {
-  if (!s) return '';
-  var d = document.createElement('div');
-  d.appendChild(document.createTextNode(s));
-  return d.innerHTML;
-}
-
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && document.getElementById('twinView').classList.contains('open')) {
-    toggleTwin();
-  }
-});
-</script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

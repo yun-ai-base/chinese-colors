@@ -1,0 +1,19 @@
+{
+  "name": "中国传统色彩",
+  "short_name": "传统色",
+  "description": "67 种中国传统色彩：点击色卡为唐宋古画着色，翻阅诗文与实物考据。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f0e8",
+  "theme_color": "#f5f0e8",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
