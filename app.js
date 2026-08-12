@@ -92,6 +92,8 @@ function parseURL() {
   return p.get('t') === '1';
 }
 function syncURL() {
+  /* file:// 下 history API 会抛 SecurityError，直接跳过（状态仍在，仅 URL 不更新） */
+  if (location.protocol === 'file:') return;
   const p = new URLSearchParams();
   if (state.id !== 'zhuhong') p.set('c', state.id);
   if (state.family !== 'all') p.set('f', state.family);
@@ -547,6 +549,7 @@ function closeTwin() {
   trackEvent('twin_close');
 }
 function syncURLTwin(open) {
+  if (location.protocol === 'file:') return;
   const p = new URLSearchParams(location.search);
   if (open) p.set('t', '1'); else p.delete('t');
   const qs = p.toString();
