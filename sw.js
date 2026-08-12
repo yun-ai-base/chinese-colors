@@ -1,5 +1,5 @@
 /* 中国传统色彩 · Service Worker（GitHub Pages 生效，file:// 注册失败时静默降级） */
-const CACHE = 'cc-v1';
+const CACHE = 'cc-v2';
 const CORE = [
   './',
   './index.html',
