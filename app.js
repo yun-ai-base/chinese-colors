@@ -91,21 +91,6 @@ function parseURL() {
   if (p.get('s') === '1') state.stats = true;
   return p.get('t') === '1';
 }
-function syncURL() {
-  /* file:// 下 history API 会抛 SecurityError，直接跳过（状态仍在，仅 URL 不更新） */
-  if (location.protocol === 'file:') return;
-  const p = new URLSearchParams();
-  if (state.id !== 'zhuhong') p.set('c', state.id);
-  if (state.family !== 'all') p.set('f', state.family);
-  if (state.mode !== 'paintings') p.set('m', state.mode);
-  if (state.q) p.set('q', state.q);
-  if (state.stats) p.set('s', '1');
-  const qs = p.toString();
-  const target = qs ? location.pathname + '?' + qs : location.pathname;
-  if (location.href !== location.origin + target) history.pushState({}, '', target);
-}
-let urlTimer = null;
-function queueSyncURL() { clearTimeout(urlTimer); urlTimer = setTimeout(syncURL, 200); }
 
 /* ============ 6. 工具 ============ */
 function renderColorName(c) {
@@ -202,7 +187,6 @@ function setFilter(family) {
     b.setAttribute('aria-pressed', String(on));
   });
   renderGrid();
-  queueSyncURL();
   trackEvent('filter', { family });
 }
 function applyFilters() {
@@ -337,7 +321,7 @@ function selectColor(id, opts) {
   document.querySelectorAll('.paint-dot').forEach(d => d.classList.toggle('active', d.dataset.color === id));
   updateFavBtn();
   addRecent(id);
-  if (!opts.silent) { trackEvent('select_color', { id, name: c.name }); queueSyncURL(); }
+  if (!opts.silent) { trackEvent('select_color', { id, name: c.name }); }
 }
 
 /* ============ 11. 收藏 / 最近浏览 ============ */
@@ -425,7 +409,6 @@ function toggleStats() {
   p.hidden = !state.stats;
   $('statsBtn').setAttribute('aria-expanded', String(state.stats));
   if (state.stats) { renderDonut(); renderHueScatter(); }
-  queueSyncURL();
   trackEvent('stats', { open: state.stats });
 }
 
@@ -540,20 +523,11 @@ function openTwin() {
   $('twinClose').focus();
   if (!twinBuilt) { twinBuilt = true; buildTwin(); }
   trackEvent('twin_open');
-  syncURLTwin(true);
 }
 function closeTwin() {
   $('twinView').classList.remove('open');
   document.body.style.overflow = '';
-  syncURLTwin(false);
   trackEvent('twin_close');
-}
-function syncURLTwin(open) {
-  if (location.protocol === 'file:') return;
-  const p = new URLSearchParams(location.search);
-  if (open) p.set('t', '1'); else p.delete('t');
-  const qs = p.toString();
-  history.replaceState({}, '', qs ? location.pathname + '?' + qs : location.pathname);
 }
 
 /* ============ 16. 主题 ============ */
@@ -615,7 +589,6 @@ function bindEvents() {
     searchTimer = setTimeout(() => {
       state.q = e.target.value.trim();
       renderGrid();
-      queueSyncURL();
       trackEvent('search', { q: state.q });
     }, 250);
   });
@@ -629,7 +602,6 @@ function bindEvents() {
     $('modeBtn').setAttribute('aria-pressed', String(onPaint));
     buildCarousel();
     if (!isMobile()) startAutoRotate();
-    queueSyncURL();
     trackEvent('mode', { mode: state.mode });
   });
 
@@ -654,9 +626,13 @@ function bindEvents() {
     m.style.display = m.style.display === 'none' ? 'block' : 'none';
   });
 
-  /* 分享深链 */
+  /* 分享深链（显式触发，不污染地址栏；file:// 下不可用） */
   $('shareBtn').addEventListener('click', e => {
     e.stopPropagation();
+    if (location.protocol === 'file:') {
+      toast('本地预览无法生成分享链接，部署后可分享');
+      return;
+    }
     const url = location.origin + location.pathname + '?c=' + state.id;
     copyText(url, '当前颜色链接已复制');
     trackEvent('share', { id: state.id });
