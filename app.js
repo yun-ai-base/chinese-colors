@@ -179,14 +179,18 @@ function todayColor() { return COLORS[hashStr(new Date().toISOString().slice(0, 
 /* ============ 8. 筛选与网格 ============ */
 function buildFilters() {
   const g = $('filterGroup');
-  g.innerHTML = '<button class="btn filter-btn active" data-family="all" aria-pressed="true">全部</button>';
-  FAMILY_ORDER.forEach(f => {
+  g.innerHTML = '';
+  const mk = (family, label) => {
     const b = document.createElement('button');
-    b.className = 'btn filter-btn'; b.dataset.family = f; b.textContent = f;
-    b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', () => setFilter(f));
-    g.appendChild(b);
-  });
+    b.className = 'btn filter-btn' + (family === state.family ? ' active' : '');
+    b.dataset.family = family;
+    b.setAttribute('aria-pressed', String(family === state.family));
+    b.textContent = label;
+    b.addEventListener('click', () => setFilter(family));
+    return b;
+  };
+  g.appendChild(mk('all', '全部'));
+  FAMILY_ORDER.forEach(f => g.appendChild(mk(f, f)));
 }
 function setFilter(family) {
   state.family = family;
