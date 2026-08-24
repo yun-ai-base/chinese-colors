@@ -293,6 +293,10 @@ function selectColor(id, opts) {
   $('currentName').innerHTML = renderColorName(c);
   $('currentHex').textContent = c.hex;
   $('currentDesc').textContent = c.desc;
+  const meta = [];
+  if (c.dye) meta.push('<span class="k">工艺</span>' + c.dye);
+  if (c.usage && c.usage.length) meta.push('<span class="k">用途</span>' + c.usage.join(' · '));
+  $('currentMeta').innerHTML = meta.length ? meta.map(m => '<span class="meta-chip">' + m + '</span>').join('') : '';
 
   const bp = $('backPoem'), bo = $('backObject');
   if (c.poem) { bp.textContent = c.poem; bp.className = 'back-poem'; }

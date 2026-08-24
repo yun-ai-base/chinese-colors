@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>中国传统色彩 · 67 色古画着色体验</title>
-<meta name="description" content="67 种中国传统色彩：点击色卡为古画着色，翻阅诗文与实物考据，探索配色灵感。">
+<title>中国传统色彩 · 92 色古画着色体验</title>
+<meta name="description" content="92 种中国传统色彩：点击色卡为古画着色，翻阅诗文与实物考据，探索配色灵感。">
 <meta property="og:title" content="中国传统色彩">
-<meta property="og:description" content="点击色卡，为唐宋古画着色。67 种传统色，一部可触摸的色彩史。">
+<meta property="og:description" content="点击色卡，为唐宋古画着色。92 种传统色，一部可触摸的色彩史。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="zanhua.jpg">
 <meta name="theme-color" content="#F7F3EC">
@@ -151,6 +151,9 @@ header .sub{font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:2px}
 .color-name-row .name rt{font-size:12px;font-weight:400;color:var(--muted);letter-spacing:0}
 .color-name-row .hex{font-size:13px;color:var(--muted);font-family:var(--mono)}
 .color-desc{font-size:13px;color:var(--text-2);line-height:1.6;max-width:360px;margin:2px auto 6px}
+.color-meta{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:6px 0 2px;min-height:0}
+.meta-chip{font-size:11px;color:var(--text-2);padding:2px 10px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface-2);font-family:var(--sans);letter-spacing:1px}
+.meta-chip .k{color:var(--muted);margin-right:4px}
 .info-actions{display:flex;justify-content:center;gap:8px;margin:6px 0}
 .mini-btn{
   display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--radius-pill);
@@ -345,7 +348,7 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
       <span class="seal" aria-hidden="true">色</span>
       <h1>中国传统色彩</h1>
     </div>
-    <div class="sub">共 <span id="totalCount">67</span> 色 · 点击颜色卡为画作着色</div>
+    <div class="sub">共 <span id="totalCount">92</span> 色 · 点击颜色卡为画作着色</div>
     <button class="today-badge" id="todayBtn" title="今日一色，点击直达">
       <span class="sw" id="todaySwatch"></span><span id="todayName">今日一色</span>
     </button>
@@ -368,6 +371,7 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
                 <span class="hex" id="currentHex">#FF4C00</span>
               </div>
               <div class="color-desc" id="currentDesc"></div>
+              <div class="color-meta" id="currentMeta"></div>
               <div class="info-actions">
                 <button class="mini-btn" id="favBtn" aria-pressed="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.7-4.35-9.3-8.1C.8 9.9 2.4 5.5 6.3 5.5c2.2 0 3.5 1.2 4.2 2.4.7-1.2 2-2.4 4.2-2.4 3.9 0 5.5 4.4 3.6 7.4C18.7 16.65 12 21 12 21z"/></svg>
@@ -420,7 +424,7 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
       <div class="viz-panel" id="vizPanel" hidden>
         <div>
           <div class="viz-title">色系分布</div>
-          <div class="donut" id="donut"><div class="donut-center"><b id="donutTotal">67</b>色</div></div>
+          <div class="donut" id="donut"><div class="donut-center"><b id="donutTotal">92</b>色</div></div>
           <div class="donut-legend" id="donutLegend"></div>
         </div>
         <div style="position:relative">
@@ -461,7 +465,7 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="data.js?v=20260812"></script>
-<script src="app.js?v=20260812"></script>
+<script src="data.js?v=20260824"></script>
+<script src="app.js?v=20260824"></script>
 </body>
 </html>

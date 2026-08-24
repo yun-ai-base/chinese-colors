@@ -1,7 +1,7 @@
 {
   "name": "中国传统色彩",
   "short_name": "传统色",
-  "description": "67 种中国传统色彩：点击色卡为唐宋古画着色，翻阅诗文与实物考据。",
+  "description": "92 种中国传统色彩：点击色卡为唐宋古画着色，翻阅诗文与实物考据。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
