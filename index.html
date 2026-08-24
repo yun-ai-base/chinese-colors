@@ -9,19 +9,20 @@
 <meta property="og:description" content="点击色卡，为唐宋古画着色。67 种传统色，一部可触摸的色彩史。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="zanhua.jpg">
-<meta name="theme-color" content="#f5f0e8">
+<meta name="theme-color" content="#F7F3EC">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/index.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5/index.css">
 <style>
-/* ========== 基础 token ========== */
+/* ========== 基础 token（宋式雅致） ========== */
 :root{
-  --c-paper:#f5f0e8; --c-paper-2:#efe7d8; --c-surface:#fffdf8; --c-surface-2:#f8f4ee;
-  --c-ink:#3d2b1f; --c-ink-2:#57493c; --c-ink-3:#6f5f4e;
-  --c-line:#d4c8b8; --c-line-soft:rgba(61,43,31,.12); --c-accent:#c0392b; --c-accent-soft:rgba(192,57,43,.08);
-  --shadow-1:0 2px 8px rgba(61,43,31,.08); --shadow-2:0 10px 28px rgba(61,43,31,.14);
+  --c-paper:#F7F3EC; --c-paper-2:#F0EAE0; --c-surface:#FDFBF7; --c-surface-2:#F6F1E9;
+  --c-ink:#3D2B1F; --c-ink-2:#6B5B4A; --c-ink-3:#746454;
+  --c-line:#E0D7C6; --c-line-soft:rgba(61,43,31,.10); --c-accent:#A93226; --c-accent-soft:rgba(169,50,38,.09);
+  --c-gold:#B8860B; --c-celadon:#7BA4B5;
+  --shadow-1:0 2px 10px rgba(61,43,31,.07); --shadow-2:0 12px 32px rgba(61,43,31,.13);
   --radius-lg:16px; --radius-md:10px; --radius-sm:8px; --radius-pill:999px;
   --carousel-radius:240px;
   --serif:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif;
@@ -30,14 +31,15 @@
   /* 语义 token */
   --bg:var(--c-paper); --surface:var(--c-surface); --surface-2:var(--c-surface-2);
   --text:var(--c-ink); --text-2:var(--c-ink-2); --muted:var(--c-ink-3);
-  --border:var(--c-line); --accent:var(--c-accent);
+  --border:var(--c-line); --accent:var(--c-accent); --gold:var(--c-gold); --celadon:var(--c-celadon);
   --paper-noise:0.05;
 }
 html[data-theme="dark"]{
-  --c-paper:#211c17; --c-paper-2:#2a241d; --c-surface:#322b22; --c-surface-2:#3a3228;
-  --c-ink:#ece3d2; --c-ink-2:#c9bca7; --c-ink-3:#a2907a;
-  --c-line:#4a4034; --c-line-soft:rgba(236,227,210,.14); --c-accent:#e0674f; --c-accent-soft:rgba(224,103,79,.14);
-  --shadow-1:0 2px 8px rgba(0,0,0,.3); --shadow-2:0 10px 28px rgba(0,0,0,.4);
+  --c-paper:#1E1A16; --c-paper-2:#262019; --c-surface:#2E2820; --c-surface-2:#363028;
+  --c-ink:#ECE5D8; --c-ink-2:#C9BCA7; --c-ink-3:#9C8E7B;
+  --c-line:#463C30; --c-line-soft:rgba(236,229,216,.13); --c-accent:#C0472F; --c-accent-soft:rgba(192,71,47,.16);
+  --c-gold:#D4A94A; --c-celadon:#8FB4C2;
+  --shadow-1:0 2px 10px rgba(0,0,0,.3); --shadow-2:0 12px 32px rgba(0,0,0,.4);
   --paper-noise:0.07;
   --carousel-radius:220px;
   color-scheme:dark;
@@ -57,9 +59,12 @@ body::after{
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.5}
 #app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh}
-header{text-align:center;padding:12px 20px 8px;border-bottom:1px solid var(--border);flex-shrink:0;position:relative}
-header h1{font-size:22px;font-weight:700;letter-spacing:6px}
-header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
+header{text-align:center;padding:14px 20px 10px;border-bottom:1px solid var(--border);flex-shrink:0;position:relative}
+header::after{content:'';position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45;pointer-events:none}
+.brand{display:flex;align-items:center;justify-content:center;gap:12px}
+.seal{width:36px;height:36px;background:var(--accent);color:#FDFBF7;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;font-family:var(--serif);line-height:1;box-shadow:0 2px 8px rgba(169,50,38,.32);flex-shrink:0;letter-spacing:0}
+header h1{font-size:24px;font-weight:700;letter-spacing:8px}
+header .sub{font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:2px}
 .icon-btn{
   position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;
   border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;
@@ -117,7 +122,7 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:2px}
   background:var(--dot-color-0,var(--robe-color));animation:bounceDot 5s cubic-bezier(.45,.05,.55,.95) infinite;
   box-shadow:0 0 10px var(--dot-color-0,var(--robe-color));
 }
-.flip-inner{position:relative;width:100%;min-height:200px;transition:transform .6s ease;transform-style:preserve-3d}
+.flip-inner{position:relative;width:100%;min-height:200px;transition:transform .7s cubic-bezier(.4,.15,.2,1);transform-style:preserve-3d}
 .flip-wrap.flipped .flip-inner{transform:rotateY(180deg)}
 .flip-front,.flip-back{position:relative;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
 .flip-back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8px 12px;overflow-y:auto}
@@ -218,17 +223,18 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
   transition:transform 0.25s,box-shadow 0.25s;box-shadow:var(--shadow-1);border:2px solid transparent;
   padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center;
 }
-.color-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-2)}
+.color-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-2)}
 .color-card:active{transform:scale(.97)}
 .color-card.active{border-color:var(--accent)}
 .color-card.active::after{content:'✓';position:absolute;top:8px;right:10px;font-size:12px;color:var(--accent)}
 .color-card{position:relative}
 .color-swatch{
   width:82px;height:82px;border-radius:50%;transition:transform .3s,box-shadow .3s;position:relative;
-  box-shadow:0 6px 16px rgba(0,0,0,.15),0 2px 4px rgba(0,0,0,.1),inset 0 -3px 6px rgba(0,0,0,.08);flex-shrink:0;
+  box-shadow:0 8px 22px rgba(61,43,31,.15),0 2px 6px rgba(61,43,31,.09),
+    inset 0 2px 4px rgba(255,255,255,.5),inset 0 -4px 8px rgba(0,0,0,.12);flex-shrink:0;
 }
-.color-swatch::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.5) 0%,rgba(255,255,255,.12) 20%,transparent 45%,rgba(0,0,0,.12) 70%,rgba(0,0,0,.35) 100%);pointer-events:none}
-.color-swatch::after{content:'';position:absolute;top:7%;left:20%;width:28%;height:18%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.6) 0%,transparent 70%);pointer-events:none}
+.color-swatch::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 33% 27%,rgba(255,255,255,.55) 0%,rgba(255,255,255,.16) 20%,transparent 46%,rgba(0,0,0,.07) 68%,rgba(0,0,0,.28) 100%);pointer-events:none}
+.color-swatch::after{content:'';position:absolute;top:8%;left:22%;width:26%;height:16%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.65) 0%,transparent 70%);pointer-events:none}
 .color-card:hover .color-swatch{transform:scale(1.06)}
 .color-card .info{padding:6px 4px 0}
 .color-card .info .cname{font-size:14px;font-weight:700;letter-spacing:1px}
@@ -335,7 +341,10 @@ html[data-theme="dark"] #hueCanvas{background:radial-gradient(circle at center,#
 
 <div id="app">
   <header>
-    <h1>中国传统色彩</h1>
+    <div class="brand">
+      <span class="seal" aria-hidden="true">色</span>
+      <h1>中国传统色彩</h1>
+    </div>
     <div class="sub">共 <span id="totalCount">67</span> 色 · 点击颜色卡为画作着色</div>
     <button class="today-badge" id="todayBtn" title="今日一色，点击直达">
       <span class="sw" id="todaySwatch"></span><span id="todayName">今日一色</span>

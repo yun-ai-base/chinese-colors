@@ -540,7 +540,7 @@ function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   $('themeIcon').innerHTML = theme === 'dark' ? ICON_SUN : ICON_MOON;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = theme === 'dark' ? '#211c17' : '#f5f0e8';
+  if (meta) meta.content = theme === 'dark' ? '#1E1A16' : '#F7F3EC';
 }
 
 /* ============ 17. 事件绑定 ============ */
